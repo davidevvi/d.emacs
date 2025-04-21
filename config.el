@@ -551,17 +551,12 @@
         centaur-tabs-set-close-button nil)
   )
 ;; set gcal sync
+(load-file "~/.config/doom/org-gcal_info.el")
 (use-package! org-gcal
   :config
-  (setq org-gcal-client-id "580236269929-6gipok6rrd4u6eci349eslfjjgl1fr5o.apps.googleusercontent.com"
-        org-gcal-client-secret "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"
-        org-gcal-fetch-file-alist '(("darvide1998@gmail.com" .  "~/Documents/Calendars/personal.org")
-                                    ("lqu2p12luoece8kfb7091njcr0@group.calendar.google.com" .  "~/Documents/Calendars/critical.org")
-                                    ("ae688a00eb2a1fbe946be2d142f1ad16e46726128759e3485cd7ff1aaa4b5571@group.calendar.google.com" .  "~/Documents/Calendars/ideal.org")
-                                    ("d6cc6ff626f861970d3057246cb8bbb53577fa7fc7648b2bb9754f0fc38ec4e3@group.calendar.google.com" .  "~/Documents/Calendars/immutable.org")
-                                    ("vke22evqqstq597bo58trnv62k@group.calendar.google.com" .  "~/Documents/Calendars/important.org")
-                                    ("f0f99ba99e3438ac3900364ea3b218f76a4ee33e5dad18a064c7d0e59cdfe39a@group.calendar.google.com" .  "~/Documents/Calendars/meeting.org")
-                                    )))
+  (setq org-gcal-client-id my-org-gcal-client-id
+        org-gcal-client-secret my-org-gcal-client-secret
+        org-gcal-fetch-file-alist my-org-gcal-fetch-file-alist))
 
 
 ;;;;set source locks background to be 50% darker
