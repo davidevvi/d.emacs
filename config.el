@@ -141,7 +141,7 @@
   (setq org-confirm-babel-evaluate nil)
 
   ;; Do not evaluate code blocks when exporting.
-  (setq org-export-babel-evaluate nil)
+  (setq org-export-use-babel nil)
 
   ;; Show images when opening a file.
   (setq org-startup-with-inline-images t)
@@ -162,12 +162,12 @@
   (org-mode . mixed-pitch-mode)
   :config
   (custom-set-faces
-   '(org-document-title ((t (:height 1.6))))
-   '(outline-1          ((t (:height 1.25))))
-   '(outline-2          ((t (:height 1.2))))
-   '(outline-3          ((t (:height 1.15))))
-   '(outline-4          ((t (:height 1.1))))
-   '(outline-5          ((t (:height 1.1))))
+   '(org-document-title ((t (:height 2.0))))
+   '(outline-1          ((t (:height 1.8))))
+   '(outline-2          ((t (:height 1.6))))
+   '(outline-3          ((t (:height 1.4))))
+   '(outline-4          ((t (:height 1.2))))
+   '(outline-5          ((t (:height 1.15))))
    '(outline-6          ((t (:height 1.1))))
    '(outline-8          ((t (:height 1.1))))
    '(outline-9          ((t (:height 1.1)))))
@@ -501,20 +501,34 @@
 ;; activate auctex by default when open tex file
 (setq major-mode-remap-alist major-mode-remap-defaults)
 
-(after! latex
-  (setq reftex-default-bibliography "~/Documents/PhD/Research/references.bib")
-  (setq LaTeX-fill-break-at-separators nil) ;; Avoid breaking formatting of equations, environments
-  :commands (cdlatex-mode))
+(use-package! latex
+  :hook
+  (LaTeX-mode . yas-minor-mode)
+  (LaTeX-mode . cdlatex-mode)
+  (LaTeX-mode . olivetti-mode)
+  (LaTeX-mode . smartparens-mode)
+  (LaTeX-mode . (lambda () (setq TeX-command-default "LaTeXMk")) )
+
+  :config
+  (setq reftex-default-bibliography "~/Documents/PhD/Research/references.bib"
+        ;; Avoid breaking formatting of equations, environments
+        LaTeX-fill-break-at-separators nil
+        )
+  )
+
 ;;(map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab)
-(after! smartparens
-  (sp-local-pair 'latex-mode "\\left(" " \\right)" :trigger "("))
-(after! cdlatex
-  (define-key cdlatex-mode-map (kbd ";")
-              (lambda ()
-                (interactive)
-                (if (eq last-command 'cdlatex-math-symbol)
-                    (insert ";")
-                  (call-interactively #'cdlatex-math-symbol)))))
+
+(use-package! smartparens
+  :config
+  (sp-local-pair 'LaTeX-mode "\\left(" "\\right)" :insert "C-b l" :trigger "\\l("))
+
+;;(after! cdlatex
+;;  (define-key cdlatex-mode-map (kbd ";")
+;;              (lambda ()
+;;                (interactive)
+;;                (if (eq last-command 'cdlatex-math-symbol)
+;;                    (insert ";")
+;;                  (call-interactively #'cdlatex-math-symbol)))))
 
 
 ;; speed up which-key's buffer prompt
@@ -553,7 +567,7 @@
 ;; set gcal sync
 (load-file "~/.config/doom/org-gcal_info.el")
 (use-package! org-gcal
-  :config
+  :hook
   (setq org-gcal-client-id my-org-gcal-client-id
         org-gcal-client-secret my-org-gcal-client-secret
         org-gcal-fetch-file-alist my-org-gcal-fetch-file-alist))
@@ -572,10 +586,12 @@
 ;; disable word completion when writing prose (org, md, latex), still does not completly works
 (use-package! company
   :config
-  (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist)
+  (setq company-minimum-prefix-length 1
+        +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist)
         +company-backend-alist (assq-delete-all 'org-mode +company-backend-alist)
         +company-backend-alist (assq-delete-all 'latex-mode +company-backend-alist)
         +company-backend-alist (assq-delete-all 'LaTex-mode +company-backend-alist))
+
   (add-to-list '+company-backend-alist '(text-mode (:separate  company-yasnippet)))
   (add-to-list '+company-backend-alist '(org-mode (:separate  company-yasnippet)))
   (add-to-list '+company-backend-alist '(latex-mode (:separate  company-yasnippet)))
@@ -591,34 +607,71 @@
 
 ;; automatic line breaking
 (add-hook 'text-mode-hook 'auto-fill-mode) ;; Enable auto-fill-mode in text modes
-(setq-default fill-column 80) ;; Set wrap column (adjust as needed
+(setq-default fill-column 88) ;; Set wrap column (adjust as needed)
 
 ;;org modern
-(use-package! org-modern
-  :hook (org-mode . org-modern-mode)
+;;(use-package! org-modern
+;;  :hook (org-mode . org-modern-mode)
+;;  :config
+;;  (setq
+;;   ;; Edit settings
+;;   org-fold-catch-invisible-edits 'show-and-error
+;;   org-special-ctrl-a/e t
+;;   org-insert-heading-respect-content t
+;;   ;; Appearance
+;;   org-pretty-entities t
+;;   org-modern-radio-target    '("❰" t "❱")
+;;   org-modern-internal-target '("↪ " t "")
+;;   org-modern-todo t
+;;   org-modern-tag t
+;;   org-modern-timestamp t
+;;   org-modern-progress t
+;;   org-modern-priority t
+;;   org-modern-horizontal-rule "──────────────────────────────────────────────────"
+;;   org-modern-checkbox '((?X . "✔")
+;;                         (?- . "┅")
+;;                         (?\s . "□"))
+;;   org-modern-hide-stars "·"
+;;   org-modern-star ["⁖"]
+;;   org-modern-keyword "‣"
+;;   org-modern-list '((43 . "•")
+;;                     (45 . "–")
+;;                     (42 . "↪")))
+;;  )
+
+
+;; notify agenda events
+(use-package emacs
   :config
-  (setq
-   ;; Edit settings
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
-   ;; Appearance
-   org-pretty-entities t
-   org-modern-radio-target    '("❰" t "❱")
-   org-modern-internal-target '("↪ " t "")
-   org-modern-todo t
-   org-modern-tag t
-   org-modern-timestamp t
-   org-modern-progress t
-   org-modern-priority t
-   org-modern-horizontal-rule "──────────────────────────────────────────────────"
-   org-modern-checkbox '((?X . "✔")
-                         (?- . "┅")
-                         (?\s . "□"))
-   org-modern-hide-stars "·"
-   org-modern-star ["⁖"]
-   org-modern-keyword "‣"
-   org-modern-list '((43 . "•")
-                     (45 . "–")
-                     (42 . "↪")))
-  )
+  ;; start warning 60 minutes before the appointment
+  (setq appt-message-warning-time 60)
+
+  ;; warn me every 5 minutes
+  (setq appt-display-interval 5)
+
+  (if (eq system-type 'darwin)
+      ;; for mac, use org-show-notification, which is more limited
+      (setq appt-disp-window-function
+            (lambda (remaining new-time msg)
+              (org-show-notification msg)))
+
+    ;; for other systems, use notifications-notify
+    (setq appt-disp-window-function
+          (lambda (remaining new-time msg)
+            (notifications-notify
+             :title (format "In %s minutes" remaining)
+             :body msg
+             :urgency 'critical))))
+
+  (advice-add 'appt-check
+              :before
+              (lambda (&rest args)
+                (org-agenda-to-appt t)))
+
+  (appt-activate t))
+
+(use-package olivetti
+  ;; Standard body width of 70 makes for strange looking org buffers,
+  ;; whose width is auto filled to 80.
+  :hook
+  ((olivetti-mode-on-hook . (lambda () (olivetti-set-width 100)))))
