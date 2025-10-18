@@ -3,298 +3,66 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-(setq epg-pinentry-mode 'loopback)
-(setq plstore-cache-passphrase-for-symmetric-encryption t)
+;; --- --- --- --- --- ---
+;; --- BETTER DEFAULTS ---
+;; --- --- --- --- --- ---
+
+(setq-default
+ window-combination-resize t ; take new window space from all other windows (not just current)
+ x-stretch-cursor t
+ )
+
+(setq
+ evil-want-fine-undo t ; By default while in insert all changes are one big blob. Be more granular
+ auto-save-default t ; Nobody likes to loose work, I certainly don't
+ truncate-string-ellipsis "..." ; Unicode ellispis are nicer than "...", and also save /precious/ space
+ password-cache-expiry nil ; I can trust my computers ... can't I?
+ scroll-preserve-screen-position 'always ; Don't have `point' jump around
+ scroll-margin 2 ; It's nice to maintain a little margin
+ display-time-default-load-average nil ; I don't think I've ever found this useful
+ ) 
+
+(display-time-mode 1) ; Enable time in the mode-line
+(global-subword-mode 1) ; Iterate through CamelCase words
 
 
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
-(setq user-full-name "Davide Vallenzasca"
-      user-mail-address "darvide1998@gmail.com")
+(setq evil-vsplit-window-right t ;better splitting
+      evil-split-window-below t
+      )
+(defadvice! prompt-for-buffer (&rest _) ;prompt buffer choice after splitting
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer)
+  )
 
-;; Doom exposes five (optional) variables for controlling fonts in Doom:
-;;
-;; - `doom-font' -- the primary font to use
-;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
-;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;; - `doom-symbol-font' -- for symbols
-;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
-;;
-;; See 'C-h v doom-font' for documentation and more examples of what they
-;; accept. For example:
-;;
-(setq doom-font (font-spec :family "Fira Code" :size 16 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 18 :weight 'regular))
-;;
-;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
-;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
-;; refresh your font settings. If Emacs still can't find your font, it likely
-;; wasn't installed correctly. Font issues are rarely Doom issues!
+(global-set-key [remap dabbrev-expand] #'hippie-expand) ;better expansion
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord-aurora)
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
+;; --- --- --- --- 
+;; --- FONTS ---
+;; --- --- --- ---
+(setq
+ doom-font (font-spec :family "JetBrains Mono" :size 18)
+ doom-big-font (font-spec :family "JetBrains Mono" :size 30)
+ doom-variable-pitch-font (font-spec :family "Overpass" :size 20)
+ doom-symbol-font (font-spec :family "JuliaMono")
+ doom-serif-font (font-spec :family "IBM Plex Mono" :size 16 :weight 'light)
+ )
+
+
+;; --- --- --- --- --- ---
+;; --- LINE NUMBERS ---
+;; --- --- --- --- --- ---
 (setq display-line-numbers-type 'relative)
 
-(use-package! doom-modeline
-  :hook
-  (doom-modeline-mode . display-battery-mode)
-  (doom-modeline-mode . display-time-mode)
-  :config
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-enable-word-count t)
-  (setq doom-modeline-time-analogue-clock t)
-  )
 
-;; start emacs full screen
-;; dont cover windows taskbar
-;;(add-to-list 'default-frame-alist     '(fullscreen . maximized))
-;; cover windows taskbar
-(add-to-list 'default-frame-alist     '(fullscreen . fullboth))
+;; --- --- --- --- 
+;; --- THEME ---
+;; --- --- --- ---
+(setq doom-theme 'doom-acario-light)
 
-
-(set-face-attribute 'header-line t :inherit 'default)
-
-(when (eq system-type 'gnu/linux)
-                                        ; don't show buffer name in title bar
-  (setq frame-title-format nil)
-                                        ; no title bar
-  ;;(add-to-list 'default-frame-alist '(undecorated . t))
-                                        ; add small border to enable drag/resize
-  (add-to-list 'default-frame-alist '(drag-internal-border . 1)))
-
-;; Whenever you reconfigure a package, make sure to wrap your config in an
-;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
-;;
-;;   (after! PACKAGE
-;;     (setq x y))
-;;
-;; The exceptions to this rule:
-;;
-;;   - Setting file/directory variables (like `org-directory')
-;;   - Setting variables which explicitly tell you to set them before their
-;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
-;;   - Setting doom variables (which start with 'doom-' or '+').
-;;
-;; Here are some additional functions/macros that will help you configure Doom.
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
-;; etc).
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
-
-(setq standard-indent 2)
-(setq-default tab-width 2)
-(setq evil-shift-width 2)
-(setq pixel-scroll-mode 1)
-
-;; tab always indent (otherwise it just insert tab if the cursor is not at the
-;; start of the line)
-(setq tab-always-indent 'complete)
-
-;; custom keybindings
-(map! :leader
-      "x" #'org-capture
-      ;; "X" (cmd! (split-window-below) (other-window 1) (switch-to-buffer "*scratch*"))
-      )
-
-(after! evil
-  (setq evil-escape-key-sequence "jk"
-        evil-escape-delay 0.1
-        evil-snipe-local-mode nil
-        ))
-
-(use-package! sage-shell-mode
-  :hook
-  ('sage-shell-after-prompt-hook #'sage-shell-view-mode)
-  :config
-  (setq sage-shell:sage-executable "/home/madv/miniforge3/envs/sage/bin/sage"))
-
-(use-package! ob-sagemath
-  :config
-  ;; Ob-sagemath supports only evaluating with a session.
-  (setq org-babel-default-header-args:sage '((:session . t)
-                                             (:results . "output")))
-
-  ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-  (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
-
-  ;; Do not confirm before evaluation
-  (setq org-confirm-babel-evaluate nil)
-
-  ;; Do not evaluate code blocks when exporting.
-  (setq org-export-use-babel nil)
-
-  ;; Show images when opening a file.
-  (setq org-startup-with-inline-images t)
-
-  ;; Show images after evaluating code blocks.
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
-
-(after! mixed-pitch
-  (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font doom-variable-pitch-font)
-  (set-face-attribute 'variable-pitch nil))
-
-;; org config
-(setq org-directory "~/Documents/")
-(use-package! org
-  :hook
-  (org-mode . olivetti-mode)
-  (org-mode . mixed-pitch-mode)
-  :config
-  (custom-set-faces
-   '(org-document-title ((t (:height 2.0))))
-   '(outline-1          ((t (:height 1.8))))
-   '(outline-2          ((t (:height 1.6))))
-   '(outline-3          ((t (:height 1.4))))
-   '(outline-4          ((t (:height 1.2))))
-   '(outline-5          ((t (:height 1.15))))
-   '(outline-6          ((t (:height 1.1))))
-   '(outline-8          ((t (:height 1.1))))
-   '(outline-9          ((t (:height 1.1)))))
-  (setq
-   org-startup-folded 'content
-   org-pretty-entities t
-   org-ellipsis "  ·"
-   ;; keep source block dispaly as their language
-   org-src-fontify-natively t
-   org-src-tab-acts-natively t
-   org-edit-src-content-indentation 0
-
-   org-indent-mode -1)
-  )
-(use-package svg-tag-mode
-  :after org
-  :config
-  (defconst date-re "[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}")
-  (defconst time-re "[0-9]\\{2\\}:[0-9]\\{2\\}")
-  (defconst day-re "[A-Za-z]\\{3\\}")
-  (defconst day-time-re (format "\\(%s\\)? ?\\(%s\\)?" day-re time-re))
-
-  (defun svg-progress-percent (value)
-    (svg-image (svg-lib-concat
-                (svg-lib-progress-bar (/ (string-to-number value) 100.0)
-                                      nil :margin 0 :stroke 2 :radius 3 :padding 2 :width 11)
-                (svg-lib-tag (concat value "%")
-                             nil :stroke 0 :margin 0)) :ascent 'center))
-
-  (defun svg-progress-count (value)
-    (let* ((seq (mapcar #'string-to-number (split-string value "/")))
-           (count (float (car seq)))
-           (total (float (cadr seq))))
-      (svg-image (svg-lib-concat
-                  (svg-lib-progress-bar (/ count total) nil
-                                        :margin 0 :stroke 2 :radius 3 :padding 2 :width 11)
-                  (svg-lib-tag value nil
-                               :stroke 0 :margin 0)) :ascent 'center)))
-  (setq svg-tag-tags
-        `(;; Org tags
-          ;; (":\\([A-Za-z0-9]+\\)" . ((lambda (tag) (svg-tag-make tag))))
-          ;; (":\\([A-Za-z0-9]+[ \-]\\)" . ((lambda (tag) tag)))
-
-          ;; Task priority
-          ("\\[#[A-Z]\\]" . ( (lambda (tag)
-                                (svg-tag-make tag :face 'org-priority
-                                              :beg 2 :end -1 :margin 0))))
-
-          ;; Progress
-          ("\\(\\[[0-9]\\{1,3\\}%\\]\\)" . ((lambda (tag)
-                                              (svg-progress-percent (substring tag 1 -2)))))
-          ("\\(\\[[0-9]+/[0-9]+\\]\\)" . ((lambda (tag)
-                                            (svg-progress-count (substring tag 1 -1)))))
-
-          ;; TODO / DONE
-          ;; ("TODO" . ((lambda (tag) (svg-tag-make "TODO" :face 'org-todo
-	  ;; 									           :inverse t :margin 0))))
-          ;; ("DONE" . ((lambda (tag) (svg-tag-make "DONE" :face 'org-done :margin 0))))
-
-
-          ;; Citation of the form [cite:@Knuth:1984]
-          ("\\(\\[cite:@[A-Za-z]+:\\)" . ((lambda (tag)
-                                            (svg-tag-make tag
-                                                          :inverse t
-                                                          :beg 7 :end -1
-                                                          :crop-right t))))
-          ("\\[cite:@[A-Za-z]+:\\([0-9]+\\]\\)" . ((lambda (tag)
-                                                     (svg-tag-make tag
-                                                                   :end -1
-                                                                   :crop-left t))))
-
-
-          ;; Active date (with or without day name, with or without time)
-          (,(format "\\(<%s>\\)" date-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :beg 1 :end -1 :margin 0))))
-          (,(format "\\(<%s \\)%s>" date-re day-time-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :beg 1 :inverse nil :crop-right t :margin 0))))
-          (,(format "<%s \\(%s>\\)" date-re day-time-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :end -1 :inverse t :crop-left t :margin 0))))
-
-          ;; Inactive date  (with or without day name, with or without time)
-          (,(format "\\(\\[%s\\]\\)" date-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :beg 1 :end -1 :margin 0 :face 'org-date))))
-          (,(format "\\(\\[%s \\)%s\\]" date-re day-time-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :beg 1 :inverse nil :crop-right t :margin 0 :face 'org-date))))
-          (,(format "\\[%s \\(%s\\]\\)" date-re day-time-re) .
-           ((lambda (tag)
-              (svg-tag-make tag :end -1 :inverse t :crop-left t :margin 0 :face 'org-date)))))))
-
-(add-hook 'org-mode-hook 'svg-tag-mode)
-
-(after! org
-  (setq org-insert-heading-respect-content nil ;;Insert Org headings at point, not after the current subtree
-        org-startup-folded 'fold
-        org-agenda-files '("~/Documents/" "~/Documents/Calendars/" "~/Documents/PhD/")
-        org-capture-templates
-        '(("t" "todo" entry (file+headline "inbox.org" "Task")
-           "* TODO %?\n%i\n%a"
-           :prepend t)
-          ("T" "deadline" entry (file+headline "inbox.org" "Task")
-           "* [ ] %?\nDEADLINE: \n\n%i\n%a"
-           :prepend t)
-          ("x" "note" entry (file+headline "~/inbox.org" "Notes")
-           "* %^{Title}\n:PROPERTIES:\n:DATE: %U\n:SOURCE: %a\n:END:\n\n%?"
-           :prepend t)
-          ("p" "to process" entry (file+headline "inbox.org" "To Process")
-           "* [ ] %?\n%i\n%a"
-           :prepend t)
-          ("s" "seminar" entry (file+headline "inbox.org" "Seminars")
-           "* %^{Title}\n  :PROPERTIES:\n :SERIE: %^{Serie}\n :DATE: %U\n :SPEAKER: %^{Speaker}\n :INTERESTING: [...]\n  :END:\n  %?"
-           :prepend t))))
-
-(use-package! org-appear
-  :hook
-  (org-mode . org-appear-mode)
-  :config
-  (setq org-hide-emphasis-markers t
-        org-appear-autolinks 'just-brackets))
-
-
-;; splashscreens
-
+;; --- --- --- --- --- 
+;; --- DASHBOARD ---
+;; --- --- --- --- ---
 (defun shrek ()
   (let* ((banner '(
                    "⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
@@ -325,353 +93,491 @@
 
 (setq +doom-dashboard-ascii-banner-fn #'shrek)
 
-(after! org-agenda
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-          ;; Indent todo items by level to show nesting
-          (todo . " %i %-12:c%l")
-          (tags . " %i %-12:c")
-          (search . " %i %-12:c"))))
 
-(use-package! org-super-agenda
-  :after org-agenda
-  :config
-  ;; Enable org-super-agenda
-  (org-super-agenda-mode)
+;; --- --- --- --- ---
+;; --- WHICH KEY ---
+;; --- --- --- --- ---
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist ;remove evil from key name
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "\\1"))
+   ))
 
-  (setq org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-include-deadlines t
-        org-agenda-include-diary t
-        org-agenda-start-day nil ;by default org-super-agenda's today=real_today-3 for some reason. this fixes it
-        org-agenda-block-separator nil
-        org-agenda-compact-blocks t
-        org-agenda-start-with-log-mode t)
-
-  (setq org-agenda-custom-commands
-        '(("z" "Super zaen view"
-           ((agenda "" ((org-agenda-span 'day)
-                        (org-super-agenda-groups
-                         '((:name "Today"
-                            :time-grid t
-                            :date today
-                            :scheduled today
-                            :order 1)))))
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-super-agenda-groups
-                          '((:name "Next to do"
-                             :todo "NEXT"
-                             :order 10)
-                            (:name "Priority A"
-                             :tag "Important"
-                             :priority "A"
-                             :order 1)
-                            (:name "Priority B"
-                             :tag "Important"
-                             :priority "B"
-                             :order 2)
-                            (:name "Priority C"
-                             :priority "C"
-                             :tag ("Trivial" "Unimportant")
-                             :todo ("SOMEDAY" )
-                             :order 3)
-                            (:name "Due Today"
-                             :deadline today
-                             :order 0)
-                            (:name "Due Soon"
-                             :deadline future
-                             :order 8)
-                            (:name "Overdue"
-                             :deadline past
-                             :order 7)
-                            (:name "Assignments"
-                             :tag "Assignment"
-                             :order 10)
-                            (:name "Issues"
-                             :tag "Issue"
-                             :order 12)
-                            (:name "Projects"
-                             :tag "Project"
-                             :order 14)
-                            (:name "Emacs"
-                             :tag "Emacs"
-                             :order 13)
-                            (:name "Research"
-                             :tag "Research"
-                             :order 15)
-                            (:name "To read"
-                             :tag "Read"
-                             :order 30)
-                            (:name "Waiting"
-                             :todo "WAITING"
-                             :order 20)
-                            (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
-
-  ;; Make evil keymaps works on org-super-agenda headers
-  (after! evil-org-agenda
-    (setq org-super-agenda-header-map (copy-keymap evil-org-agenda-mode-map)))
-  ;; Change header face to make it standout more
-  (custom-set-faces!
-    `(org-todo
-      :weight bold :foreground ,(doom-color 'blue))
-    `(+org-todo-active
-      :weight bold :foreground ,(doom-color 'green))
-    `(org-super-agenda-header
-      :inherit 'variable-pitch
-      :weight bold :foreground ,(doom-color 'cyan))
-    `(org-agenda-structure
-      :inherit 'variable-pitch
-      :weight bold :foreground ,(doom-color 'blue))))
-
-;; outline in org
-(use-package! org-ol-tree
-  :after org
-  :commands org-ol-tree
-  :hook (org-ol-tree-mode . visual-line-mode)
-  :config
-  (setq org-ol-tree-ui-window-auto-resize nil
-        org-ol-tree-ui-window-max-width 0.3
-        org-ol-tree-ui-window-position 'left))
-(map! :map org-mode-map
-      :after org
-      :localleader
-      :desc "Outline" "O" #'org-ol-tree)
+;; --- --- --- --- 
+;; --- ABBREVS ---
+;; --- --- --- ---
+;; for instance vf->vector field
+(setq-default abbrev-mode t)
+(setq abbrev-file-name (expand-file-name "abbrev.el" doom-user-dir));set the file where they are saved
 
 
-
-                                        ;laas
-;;(use-package! laas
-;;  :hook (LaTeX-mode . laas-mode)
-;;  :config
-;;  (defun laas-tex-fold-maybe ()
-;;    (unless (equal "/" aas-transient-snippet-key)
-;;      (+latex-fold-last-macro-a)))
-;;  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe)
-;;  (setq laas-enable-auto-space nil)
-;;  ;; ;; For some reason (texmathp) returns t everywhere in org buffer
-;;  ;; ;; which is not every useful, so here's a fix
-;;  ;; (add-hook 'org-cdlatex-mode-hook
-;;  ;;           (lambda () (advice-remove 'texmathp 'org--math-always-on)))
-;;  ;;More snippets
-;;  (aas-set-snippets 'laas-mode
-;;                    ;; Condition: Not in math environment and not in a middle of a word
-;;                    :cond (lambda nil (and (not (laas-mathp)) (memq (char-before) '(10 40 32))))
-;;                    "mk"     (lambda () (interactive) (yas-expand-snippet "\$ $0 \$"))
-;;                    "citet"  (lambda () (interactive) (yas-expand-snippet "\[cite/t:@$0\]"))
-;;                    ";>"     "\\( \\rightarrow \\)"
-;;                    ;; Condition: Math environment
-;;                    :cond #'laas-mathp
-;;                    "qed"    "\\blacksquare"
-;;                    ",,"     "\\,,"
-;;                    ".,"     "\\,."
-;;                    ";0"     "\\emptyset"
-;;                    ";."     "\\cdot"
-;;                    ",."     nil                     ;disable the annoying \vec{} modifier
-;;                    "||"     nil
-;;                    "lr||"   (lambda () (interactive) (yas-expand-snippet "\\lVert $0 \\rVert"))
-;;                    "pdv"    (lambda () (interactive) (yas-expand-snippet "\\frac{\\partial $1}{\\partial $2}"))
-;;                    "dd"    (lambda () (interactive) (yas-expand-snippet "~\\mathrm{d}"))
-;;                    ;; Condition: Math environment, modify last object on the left
-;;                    :cond #'laas-object-on-left-condition
-;;                    "hat"    (lambda () (interactive) (laas-wrap-previous-object "hat"))
-;;                    "ubar"   (lambda () (interactive) (laas-wrap-previous-object "underbar"))
-;;                    "bar"    (lambda () (interactive) (laas-wrap-previous-object "bar"))
-;;                    "uline"   (lambda () (interactive) (laas-wrap-previous-object "underline"))
-;;                    "oline"   (lambda () (interactive) (laas-wrap-previous-object "overline"))
-;;                    "dot"    (lambda () (interactive) (laas-wrap-previous-object "dot"))
-;;                    "tilde"  (lambda () (interactive) (laas-wrap-previous-object "tilde"))
-;;                    "TXT"    (lambda () (interactive) (laas-wrap-previous-object "text"))
-;;                    "ON"     (lambda () (interactive) (laas-wrap-previous-object "operatorname"))
-;;                    "BON"    (lambda () (interactive) (laas-wrap-previous-object
-;;                                                       '("\\operatorname{\\mathbf{" . "}}")))
-;;                    "tt"     "_{t}"
-;;                    "tp1"    "_{t+1}"
-;;                    "tm1"    "_{t-1}"
-;;                    "ii"     "_{i}"
-;;                    "ip1"    "_{i+1}"
-;;                    "im1"    "_{i-1}"
-;;                    "jj"     "_{j}"
-;;                    "jp1"    "_{j+1}"
-;;                    "jm1"    "_{j-1}"
-;;                    "kk"     "_{k}"
-;;                    "kp1"    "_{k+1}"
-;;                    "km1"    "_{k-1}"
-;;                    "**"     "^{\\ast}"))
-
-;; activate auctex by default when open tex file
-(setq major-mode-remap-alist major-mode-remap-defaults)
-
-(use-package! latex
-  :hook
-  (LaTeX-mode . yas-minor-mode)
-  (LaTeX-mode . cdlatex-mode)
-  (LaTeX-mode . olivetti-mode)
-  (LaTeX-mode . smartparens-mode)
-  (LaTeX-mode . (lambda () (setq TeX-command-default "LaTeXMk")) )
-
-  :config
-  (setq reftex-default-bibliography "~/Documents/PhD/Research/references.bib"
-        ;; Avoid breaking formatting of equations, environments
-        LaTeX-fill-break-at-separators nil
+;; --- --- --- --- 
+;; --- EVIL ---
+;; --- --- --- ---
+(after! evil
+  (setq evil-move-cursor-back nil ; Don't move the block cursor when toggling insert mode
         )
   )
+(setq-default evil-escape-key-sequence "jk")
 
-;;(map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab)
+;; --- --- --- --- 
+;; --- CONSULT ---
+;; --- --- --- ---
+;; ie buffer/dir/etc list
+(after! consult
+  (set-face-attribute 'consult-file nil :inherit 'consult-buffer)
+  (setf (plist-get (alist-get 'perl consult-async-split-styles-alist) :initial) ";"))
 
-(use-package! smartparens
+;; --- --- --- --- 
+;; --- JINX ---
+;; --- --- --- ---
+;; better spellcheck
+(use-package! jinx
+  :defer t
+  :init
+  (add-hook 'doom-init-ui-hook #'global-jinx-mode)
   :config
-  (sp-local-pair 'LaTeX-mode "\\left(" "\\right)" :insert "C-b l" :trigger "\\l("))
+  ;; Use my custom dictionary
+  (setq jinx-languages "en_GB")
+  ;; Extra face(s) to ignore
+  (push 'org-inline-src-block
+        (alist-get 'org-mode jinx-exclude-faces))
+  ;; Take over the relevant bindings.
+  (after! ispell
+    (global-set-key [remap ispell-word] #'jinx-correct))
+  (after! evil-commands
+    (global-set-key [remap evil-next-flyspell-error] #'jinx-next)
+    (global-set-key [remap evil-prev-flyspell-error] #'jinx-previous))
+  ;; I prefer for `point' to end up at the start of the word,
+  ;; not just after the end.
+  (advice-add 'jinx-next :after (lambda (_) (left-word))))
 
-;;(after! cdlatex
-;;  (define-key cdlatex-mode-map (kbd ";")
-;;              (lambda ()
-;;                (interactive)
-;;                (if (eq last-command 'cdlatex-math-symbol)
-;;                    (insert ";")
-;;                  (call-interactively #'cdlatex-math-symbol)))))
+;; --- --- --- --- ---
+;; --- MODELINE ---
+;; --- --- --- --- ---
+;; better modeline for pdf
+;;;(doom-modeline-def-segment buffer-name
+;;;  "Display the current buffer's name, without any other information."
+;;;  (concat
+;;;   (doom-modeline-spc)
+;;;   (doom-modeline--buffer-name)))
+;;;(doom-modeline-def-segment pdf-icon
+;;;  "PDF icon from nerd-icons."
+;;;  (concat
+;;;   (doom-modeline-icon sucicon "nf-seti-pdf" nil nil
+;;;                       (doom-modeline-spc)
+;;;                       :face (if (doom-modeline--active)
+;;;                                 'nerd-icons-red
+;;;                               'mode-line-inactive)
+;;;                       :v-adjust 0.02)))
+;;;(defun doom-modeline-update-pdf-pages ()
+;;;  "Update PDF pages."
+;;;  (setq doom-modeline--pdf-pages
+;;;        (let ((current-page-str (number-to-string (eval
+;;;                                                   ↩→ `(pdf-view-current-page))))
+;;;              (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+;;;          (concat
+;;;           (propertize
+;;;            (concat (make-string (- (length total-page-str) (length
+;;;                                                             ↩→ current-page-str)) ? )
+;;;                    " P" current-page-str)
+;;;            'face 'mode-line)
+;;;           (propertize (concat "/" total-page-str) 'face
+;;;                       ↩→ 'doom-modeline-buffer-minor-mode)))))
+;;;(doom-modeline-def-segment pdf-pages
+;;;  "Display PDF pages."
+;;;  (if (doom-modeline--active) doom-modeline--pdf-pages
+;;;    (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+;;;(doom-modeline-def-modeline 'pdf
+;;;  '(bar window-number pdf-pages pdf-icon buffer-name)
+;;;  '(misc-info matches major-mode process vcs))
 
 
-;; speed up which-key's buffer prompt
-(setq which-key-idle-delay 0.25)
+;; --- --- --- --- ---
+;; --- MIXED PITCH ---
+;; --- --- --- --- ---
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
 
-;; allow which-key to expand side-window to half the frame's height
-(setq which-key-side-window-max-height 0.5)
+(autoload #'mixed-pitch-serif-mode "mixed-pitch"
+  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+
+(setq! variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+
+(after! mixed-pitch
+  (setq mixed-pitch-set-height t)
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+(defface variable-pitch-serif
+  '((t (:family "serif")))
+  "A variable-pitch face with serifs."
+  :group 'basic-faces)
+
+(defcustom variable-pitch-serif-font (font-spec :family "serif")
+  "The font face used for `variable-pitch-serif'."
+  :group 'basic-faces
+  :type '(restricted-sexp :tag "font-spec" :match-alternatives (fontp))
+  :set (lambda (symbol value)
+         (set-face-attribute 'variable-pitch-serif nil :font value)
+         (set-default-toplevel-value symbol value)))
+
+;;;(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+;;;  "Modes that ` mixed-pitch-mode ' should be enabled in, but only after UI initialisation." )
+;;;
+;;;(defun init-mixed-pitch-h ()
+;;;  "Hook ` mixed-pitch-mode ' into each mode in ` mixed-pitch-modes '. Also immediately enables ` mixed-pitch-modes ' if currently in one of the modes."
+;;;  (when (memq major-mode mixed-pitch-modes)
+;;;    (mixed-pitch-mode 1))
+;;;  (dolist (hook mixed-pitch-modes)
+;;;    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+;;;
+;;;(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+;;;(autoload #'mixed-pitch-serif-mode "mixed-pitch" "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+;;;(setq! variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+;;;(after! mixed-pitch
+;;;  (setq mixed-pitch-set-height t)
+;;;  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+;;;  (defun mixed-pitch-serif-mode (&optional arg)
+;;;    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+;;;    (interactive)
+;;;    (let ((mixed-pitch-face 'variable-pitch-serif))
+;;;      (mixed-pitch-mode (or arg 'toggle)))))
+;;;
+;;;(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+;;;(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+;;;(defface variable-pitch-serif
+;;;  '((t (:family "serif")))
+;;;  "A variable-pitch face with serifs."
+;;;  :group 'basic-faces)
+;;;
+;;;(defcustom variable-pitch-serif-font (font-spec :family "serif")
+;;;  "The font face used for ` variable-pitch-serif '."
+;;;  :group 'basic-faces
+;;;  :type '(restricted-sexp :tag "font-spec" :match-alternatives (fontp))
+;;;  :set (lambda (symbol value)
+;;;         (set-face-attribute 'variable-pitch-serif nil :font value)
+;;;         (set-default-toplevel-value symbol value)))
 
 
-;; tabs theme
-(use-package! centaur-tabs
+;; --- --- --- --- ---
+;; --- MARGINALIA ---
+;; --- --- --- --- ---
+;; better files metadata
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of ` marginalia--anotate-local-file '."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
+;; --- --- --- --- ---
+;; --- WRITEROOM ---
+;; --- --- --- --- ---
+;; Custom settings for org
+(setq +zen-text-scale 0.8)
+
+(defvar +zen-serif-p t
+  "Whether to use a serifed font with `mixed-pitch-mode'.")
+(defvar +zen-org-starhide t
+  "The value `org-modern-hide-stars' is set to.")
+
+(after! writeroom-mode
+  (defvar-local +zen--original-org-indent-mode-p nil)
+  (defvar-local +zen--original-mixed-pitch-mode-p nil)
+  (defun +zen-enable-mixed-pitch-mode-h ()
+    "Enable `mixed-pitch-mode' when in `+zen-mixed-pitch-modes'."
+    (when (apply #'derived-mode-p +zen-mixed-pitch-modes)
+      (if writeroom-mode
+          (progn
+            (setq +zen--original-mixed-pitch-mode-p mixed-pitch-mode)
+            (funcall (if +zen-serif-p #'mixed-pitch-serif-mode #'mixed-pitch-mode) 1))
+        (funcall #'mixed-pitch-mode (if +zen--original-mixed-pitch-mode-p 1 -1)))))
+  (defun +zen-prose-org-h ()
+    "Reformat the current Org buffer appearance for prose."
+    (when (eq major-mode 'org-mode)
+      (setq display-line-numbers nil
+            visual-fill-column-width 60
+            org-adapt-indentation nil)
+      (when (featurep 'org-modern)
+        (setq-local org-modern-star '("🙘" "🙙" "🙚" "🙛")
+                    ;; org-modern-star '("🙐" "🙑" "🙒" "🙓" "🙔" "🙕" "🙖" "🙗")
+                    org-modern-hide-stars +zen-org-starhide)
+        (org-modern-mode -1)
+        (org-modern-mode 1))
+      (setq
+       +zen--original-org-indent-mode-p org-indent-mode)
+      (org-indent-mode -1)))
+  (defun +zen-nonprose-org-h ()
+    "Reverse the effect of `+zen-prose-org'."
+    (when (eq major-mode 'org-mode)
+      (when (bound-and-true-p org-modern-mode)
+        (org-modern-mode -1)
+        (org-modern-mode 1))
+      (when +zen--original-org-indent-mode-p (org-indent-mode 1))))
+  (pushnew! writeroom--local-variables
+            'display-line-numbers
+            'visual-fill-column-width
+            'org-adapt-indentation
+            'org-modern-mode
+            'org-modern-star
+            'org-modern-hide-stars)
+  (add-hook 'writeroom-mode-enable-hook #'+zen-prose-org-h)
+  (add-hook 'writeroom-mode-disable-hook #'+zen-nonprose-org-h))
+
+
+;; --- --- --- --- --- ---
+;; --- ORG DEFAULTS ---
+;; --- --- --- --- --- ---
+(setq org-directory "~/Documents/" ; Let's put files here.
+      org-agenda-files (list org-directory)                  ; Seems like the obvious place.
+      org-use-property-inheritance t                         ; It's convenient to have properties inherited.
+      org-log-done 'time                                     ; Having the time a item is done sounds convenient.
+      org-list-allow-alphabetical t                          ; Have a. A. a) A) list bullets.
+      org-catch-invisible-edits 'smart                       ; Try not to accidently do weird stuff in invisible regions.
+      org-export-with-sub-superscripts '{}                   ; Don't treat lone _ / ^ as sub/superscripts, require _{} / ^{}.
+      org-export-allow-bind-keywords t                       ; Bind keywords can be handy
+      org-image-actual-width '(0.9))                         ; Make the in-buffer display closer to the exported result..
+(setq org-babel-default-header-args
+      '((:session . "none")
+        (:results . "replace")
+        (:exports . "code")
+        (:cache . "no")
+        (:noweb . "no")
+        (:hlines . "no")
+        (:tangle . "no")
+        (:comments . "link")))
+(remove-hook 'text-mode-hook #'visual-line-mode)
+(add-hook 'text-mode-hook #'auto-fill-mode)
+
+;; --- --- --- --- ---
+;; --- ORG MODERN ---
+;; --- --- --- --- ---
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
   :config
-  (defun centaur-tabs-buffer-groups ()
-    (list
-     (cond
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
+  (setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-modern-table-vertical 1
+        org-modern-table-horizontal 0.2
+        org-modern-list '((43 . "➤")
+                          (45 . "–")
+                          (42 . "•"))
+        org-modern-todo-faces
+        '(("TODO" :inverse-video t :inherit org-todo)
+          ("STRT" :inverse-video t :inherit +org-todo-active)
+          ("WAIT" :inverse-video t :inherit +org-todo-onhold)
+          org-modern-footnote
+          (cons nil (cadr org-script-display))
+          org-modern-block-fringe nil
+          org-modern-block-name
+          '((t . t)
+            ("src" "»" "«")
+            ("example" "»–" "–«")
+            ("quote" "❝" "❞")
+            ("export" "⏩" "⏪"))
+          org-modern-progress nil
+          org-modern-priority nil
+          org-modern-horizontal-rule (make-string 36 ?─)
+          org-modern-keyword
+          '((t . t)
+            ("title" . "𝙏")
+            ("subtitle" . "𝙩")
+            ("author" . "𝘼")
+            ("email" . "")
+            ("date" . "𝘿")
+            ("property" . "󰠳")
+            ("options" . #("󰘵" 0 1 (display (height 0.75))))
+            ("startup" . "⏻")
+            ("macro" . "𝓜")
+            ("bind" . "󰌷")
+            ("bibliography" . "")
+            ("print_bibliography" . "󰌱")
+            ("cite_export" . "⮭")
+            ("print_glossary" . "󰌱ᴬᶻ")
+            ("glossary_sources" . "󰒻")
+            ("include" . "⇤")
+            ("setupfile" . "⇚")
+            ("html_head" . "🅷")
+            ("html" . "🅗")
+            ("latex_class" . "🄻")
+            ("latex_class_options" . "🄻󰒓")
+            ("latex_header" . "🅻")
+            ("latex_header_extra" . "🅻⁺")
+            ("latex" . "🅛")
+            ("beamer_theme" . "🄱")
+            ("beamer_color_theme" . "🄱󰏘")
+            ("beamer_font_theme" . "🄱𝐀")
+            ("beamer_header" . "🅱")
+            ("beamer" . "🅑")
+            ("attr_latex" . "🄛")
+            ("attr_html" . "🄗")
+            ("attr_org" . "⒪")
+            ("call" . "󰜎")
+            ("name" . "⁍")
+            ("header" . "›")
+            ("caption" . "☰")
+            ("results" . "🠶")))
+        (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo))))
 
-  (setq centaur-tabs-style "box"
-        centaur-tabs-set-bar nil
-        centaur-tabs-icon-type 'nerd-icons
-        centaur-tabs-set-icons t
-        centaur-tabs-gray-out-icons 'buffer
-        centaur-tabs-set-close-button nil)
-  )
-;; set gcal sync
-(load-file "~/.config/doom/org-gcal_info.el")
-(use-package! org-gcal
-  :hook
-  (setq org-gcal-client-id my-org-gcal-client-id
-        org-gcal-client-secret my-org-gcal-client-secret
-        org-gcal-fetch-file-alist my-org-gcal-fetch-file-alist))
+(after! spell-fu
+  (cl-pushnew 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
 
-
-;;;;set source locks background to be 50% darker
-;;(after! color
-;;  :config
-;;  (set-face-attribute 'org-block nil
-;;                                        ;:box
-;;                                        ;(:line-width (1 . 0) :color "white" :style pressed-button)
-;;                      :background
-;;                      (color-darken-name
-;;                       (face-attribute 'default :background) 50)))
-
-;; disable word completion when writing prose (org, md, latex), still does not completly works
-(use-package! company
+;; --- --- --- --- ---
+;; --- ORG APPEAR --- 
+;; --- --- --- --- ---
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
   :config
-  (setq company-minimum-prefix-length 1
-        +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist)
-        +company-backend-alist (assq-delete-all 'org-mode +company-backend-alist)
-        +company-backend-alist (assq-delete-all 'latex-mode +company-backend-alist)
-        +company-backend-alist (assq-delete-all 'LaTex-mode +company-backend-alist))
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  ;; for proper first-time setup, `org-appear--set-elements'
+  ;; needs to be run after other hooks have acted.
+  (run-at-time nil nil #'org-appear--set-elements))
 
-  (add-to-list '+company-backend-alist '(text-mode (:separate  company-yasnippet)))
-  (add-to-list '+company-backend-alist '(org-mode (:separate  company-yasnippet)))
-  (add-to-list '+company-backend-alist '(latex-mode (:separate  company-yasnippet)))
-  (add-to-list '+company-backend-alist '(LaTex-mode (:separate  company-yasnippet)))
-  )
+;; --- --- --- --- ---
+;; --- ORG VISUALS --- 
+;; --- --- --- --- ---
+;; Set outline dimensions
+(custom-set-faces!
+  '(outline-1 :weight extra-bold :height 1.25)
+  '(outline-2 :weight bold :height 1.15)
+  '(outline-3 :weight bold :height 1.12)
+  '(outline-4 :weight semi-bold :height 1.09)
+  '(outline-5 :weight semi-bold :height 1.06)
+  '(outline-6 :weight semi-bold :height 1.03)
+  '(outline-8 :weight semi-bold)
+  '(outline-9 :weight semi-bold))
 
-;; better window behaviour: after split window ask which buffer to open there
-(setq evil-vsplit-window-right t
-      evil-split-window-below t)
+(custom-set-faces!
+  '(org-document-title :height 1.2))
 
-(defadvice! prompt-for-buffer (&rest _)
-  :after '(evil-window-split evil-window-vsplit) (ivy-switch-buffer))
+;; Better quote blocks
+(setq org-fontify-quote-and-verse-blocks t)
 
-;; automatic line breaking
-(add-hook 'text-mode-hook 'auto-fill-mode) ;; Enable auto-fill-mode in text modes
-(setq-default fill-column 88) ;; Set wrap column (adjust as needed)
+;; Improve performance
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
 
-;;org modern
-;;(use-package! org-modern
-;;  :hook (org-mode . org-modern-mode)
-;;  :config
-;;  (setq
-;;   ;; Edit settings
-;;   org-fold-catch-invisible-edits 'show-and-error
-;;   org-special-ctrl-a/e t
-;;   org-insert-heading-respect-content t
-;;   ;; Appearance
-;;   org-pretty-entities t
-;;   org-modern-radio-target    '("❰" t "❱")
-;;   org-modern-internal-target '("↪ " t "")
-;;   org-modern-todo t
-;;   org-modern-tag t
-;;   org-modern-timestamp t
-;;   org-modern-progress t
-;;   org-modern-priority t
-;;   org-modern-horizontal-rule "──────────────────────────────────────────────────"
-;;   org-modern-checkbox '((?X . "✔")
-;;                         (?- . "┅")
-;;                         (?\s . "□"))
-;;   org-modern-hide-stars "·"
-;;   org-modern-star ["⁖"]
-;;   org-modern-keyword "‣"
-;;   org-modern-list '((43 . "•")
-;;                     (45 . "–")
-;;                     (42 . "↪")))
-;;  )
+(add-hook 'org-mode-hook #'locally-defer-font-lock)
+
+;; Better indent and line spacing
+(defadvice! +org-indent--reduced-text-prefixes ()
+  :after #'org-indent--compute-prefixes
+  (setq org-indent--text-line-prefixes
+        (make-vector org-indent--deepest-level nil))
+  (when (> org-indent-indentation-per-level 0)
+    (dotimes (n org-indent--deepest-level)
+      (aset org-indent--text-line-prefixes
+            n
+            (org-add-props
+             (concat (make-string (* n (1- org-indent-indentation-per-level))
+                                  ?\s)
+                     (if (> n 0)
+                         (char-to-string org-indent-boundary-char)
+                       "\u200b"))
+             nil 'face 'org-indent)))))
 
 
-;; notify agenda events
-(use-package emacs
-  :config
-  ;; start warning 60 minutes before the appointment
-  (setq appt-message-warning-time 60)
+;; Nice Symbols
+(setq org-ellipsis " ▾ "
+      org-hide-leading-stars t
+      org-priority-highest ?A
+      org-priority-lowest ?E
+      org-priority-faces
+      '((?A . 'nerd-icons-red)
+        (?B . 'nerd-icons-orange)
+        (?C . 'nerd-icons-yellow)
+        (?D . 'nerd-icons-green)
+        (?E . 'nerd-icons-blue)))
 
-  ;; warn me every 5 minutes
-  (setq appt-display-interval 5)
+(appendq! +ligatures-extra-symbols
+          (list :list_property "∷"
+                :em_dash       "—"
+                :ellipses      "…"
+                :arrow_right   "→"
+                :arrow_left    "←"
+                :arrow_lr      "↔"
+                :properties    "⚙"
+                :end           "∎"
+                :priority_a    #("⚑" 0 1 (face nerd-icons-red))
+                :priority_b    #("⬆" 0 1 (face nerd-icons-orange))
+                :priority_c    #("■" 0 1 (face nerd-icons-yellow))
+                :priority_d    #("⬇" 0 1 (face nerd-icons-green))
+                :priority_e    #("❓" 0 1 (face nerd-icons-blue))))
 
-  (if (eq system-type 'darwin)
-      ;; for mac, use org-show-notification, which is more limited
-      (setq appt-disp-window-function
-            (lambda (remaining new-time msg)
-              (org-show-notification msg)))
+(defadvice! +org-init-appearance-h--no-ligatures-a ()
+  :after #'+org-init-appearance-h
+  (set-ligatures! 'org-mode nil)
+  (set-ligatures! 'org-mode
+    :list_property "::"
+    :em_dash       "---"
+    :ellipsis      "..."
+    :arrow_right   "->"
+    :arrow_left    "<-"
+    :arrow_lr      "<->"
+    :properties    ":PROPERTIES:"
+    :end           ":END:"
+    :priority_a    "[#A]"
+    :priority_b    "[#B]"
+    :priority_c    "[#C]"
+    :priority_d    "[#D]"
+    :priority_e    "[#E]"))
 
-    ;; for other systems, use notifications-notify
-    (setq appt-disp-window-function
-          (lambda (remaining new-time msg)
-            (notifications-notify
-             :title (format "In %s minutes" remaining)
-             :body msg
-             :urgency 'critical))))
-
-  (advice-add 'appt-check
-              :before
-              (lambda (&rest args)
-                (org-agenda-to-appt t)))
-
-  (appt-activate t))
-
-(use-package olivetti
-  ;; Standard body width of 70 makes for strange looking org buffers,
-  ;; whose width is auto filled to 80.
-  :hook
-  ((olivetti-mode-on-hook . (lambda () (olivetti-set-width 100)))))
+;; Better latex fragments
+(setq org-highlight-latex-and-related '(latex script entities))
+(require 'org-src)
+(add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
+(add-hook 'org-mode-hook #'org-latex-preview-auto-mode)

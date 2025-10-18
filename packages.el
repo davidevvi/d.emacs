@@ -48,21 +48,26 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-(package! sage-shell-mode)
-(package! ob-sagemath)
-
-(package! org-super-agenda)
+;;(package! sage-shell-mode)
+;;(package! ob-sagemath)
+;;
+;;(package! cdlatex)
+;;
+;;
+;;(package! yasnippet-snippets)
 ;;(package! laas)
+;;
+;;
+;;(package! olivetti)
+;;(package! svg-tag-mode)
+;;
+;;(package! exwm)
 
-(package! cdlatex)
+(package! jinx) ;better spellcheck
 
-
-(package! yasnippet-snippets)
-
-
-(package! org-appear)
 (package! org-modern)
-(package! olivetti)
-(package! svg-tag-mode)
+(package! org-appear)
+;;(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree")
+;;  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
 
-(package! exwm)
+(package! emacs-w3m)
