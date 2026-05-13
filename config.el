@@ -422,59 +422,59 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         org-modern-todo-faces
         '(("TODO" :inverse-video t :inherit org-todo)
           ("STRT" :inverse-video t :inherit +org-todo-active)
-          ("WAIT" :inverse-video t :inherit +org-todo-onhold)
-          org-modern-footnote
-          (cons nil (cadr org-script-display))
-          org-modern-block-fringe nil
-          org-modern-block-name
-          '((t . t)
-            ("src" "»" "«")
-            ("example" "»–" "–«")
-            ("quote" "❝" "❞")
-            ("export" "⏩" "⏪"))
-          org-modern-progress nil
-          org-modern-priority nil
-          org-modern-horizontal-rule (make-string 36 ?─)
-          org-modern-keyword
-          '((t . t)
-            ("title" . "𝙏")
-            ("subtitle" . "𝙩")
-            ("author" . "𝘼")
-            ("email" . "")
-            ("date" . "𝘿")
-            ("property" . "󰠳")
-            ("options" . #("󰘵" 0 1 (display (height 0.75))))
-            ("startup" . "⏻")
-            ("macro" . "𝓜")
-            ("bind" . "󰌷")
-            ("bibliography" . "")
-            ("print_bibliography" . "󰌱")
-            ("cite_export" . "⮭")
-            ("print_glossary" . "󰌱ᴬᶻ")
-            ("glossary_sources" . "󰒻")
-            ("include" . "⇤")
-            ("setupfile" . "⇚")
-            ("html_head" . "🅷")
-            ("html" . "🅗")
-            ("latex_class" . "🄻")
-            ("latex_class_options" . "🄻󰒓")
-            ("latex_header" . "🅻")
-            ("latex_header_extra" . "🅻⁺")
-            ("latex" . "🅛")
-            ("beamer_theme" . "🄱")
-            ("beamer_color_theme" . "🄱󰏘")
-            ("beamer_font_theme" . "🄱𝐀")
-            ("beamer_header" . "🅱")
-            ("beamer" . "🅑")
-            ("attr_latex" . "🄛")
-            ("attr_html" . "🄗")
-            ("attr_org" . "⒪")
-            ("call" . "󰜎")
-            ("name" . "⁍")
-            ("header" . "›")
-            ("caption" . "☰")
-            ("results" . "🠶")))
-        (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo))))
+          ("WAIT" :inverse-video t :inherit +org-todo-onhold))
+        org-modern-footnote
+        (cons nil (cadr org-script-display))
+        org-modern-block-fringe nil
+        org-modern-block-name
+        '((t . t)
+          ("src" "»" "«")
+          ("example" "»–" "–«")
+          ("quote" "❝" "❞")
+          ("export" "⏩" "⏪"))
+        org-modern-progress nil
+        org-modern-priority nil
+        org-modern-horizontal-rule (make-string 36 ?─)
+        org-modern-keyword
+        '((t . t)
+          ("title" . "𝙏")
+          ("subtitle" . "𝙩")
+          ("author" . "𝘼")
+          ("email" . "")
+          ("date" . "𝘿")
+          ("property" . "󰠳")
+          ("options" . #("󰘵" 0 1 (display (height 0.75))))
+          ("startup" . "⏻")
+          ("macro" . "𝓜")
+          ("bind" . "󰌷")
+          ("bibliography" . "")
+          ("print_bibliography" . "󰌱")
+          ("cite_export" . "⮭")
+          ("print_glossary" . "󰌱ᴬᶻ")
+          ("glossary_sources" . "󰒻")
+          ("include" . "⇤")
+          ("setupfile" . "⇚")
+          ("html_head" . "🅷")
+          ("html" . "🅗")
+          ("latex_class" . "🄻")
+          ("latex_class_options" . "🄻󰒓")
+          ("latex_header" . "🅻")
+          ("latex_header_extra" . "🅻⁺")
+          ("latex" . "🅛")
+          ("beamer_theme" . "🄱")
+          ("beamer_color_theme" . "🄱󰏘")
+          ("beamer_font_theme" . "🄱𝐀")
+          ("beamer_header" . "🅱")
+          ("beamer" . "🅑")
+          ("attr_latex" . "🄛")
+          ("attr_html" . "🄗")
+          ("attr_org" . "⒪")
+          ("call" . "󰜎")
+          ("name" . "⁍")
+          ("header" . "›")
+          ("caption" . "☰")
+          ("results" . "🠶")))
+  (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
 
 (after! spell-fu
   (cl-pushnew 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
@@ -588,7 +588,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq org-highlight-latex-and-related '(latex script entities))
 (require 'org-src)
 (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
-(add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
+;;(add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
 
 
 
@@ -745,13 +745,27 @@ Such special cases should be remapped to another value, as given in `string-offs
    :map LaTeX-mode-map
    :ei [C-return] #'LaTeX-insert-item)
   (setq TeX-electric-math '("\\(" . "")))
-(setq lsp-tex-server 'texlab)
+(setq lsp-tex-server 'digestif)
+
+(after! tex
+  (add-hook 'TeX-mode-hook
+            (lambda ()
+              ;; Keep only LSP + snippets as CAPFs
+              (setq-local completion-at-point-functions
+                          '(lsp-completion-at-point
+                            yasnippet-capf)
+                          )
+              )
+            )
+  )
+
+
 ;; --- --- --- --- 
 ;; --- CDLATEX --- 
 ;; --- --- --- ---
-;; prefere cdlatex over yasnippets
-(map! :map cdlatex-mode-map
-      :i "TAB" #'cdlatex-tab)
+;; prefer cdlatex over yasnippets
+                                        ;(map! :map cdlatex-mode-map
+                                        ;      :i "TAB" #'cdlatex-tab)
 (after! cdlatex
   (setq cdlatex-env-alist
         '(("bmatrix" "\\begin{bmatrix}\n?\n\\end{bmatrix}" nil)
@@ -841,3 +855,25 @@ Such special cases should be remapped to another value, as given in `string-offs
                              (?< ?>)))))
   (defun tec/tex-delim-yas-expand (&optional open-char)
     (yas-expand-snippet (yas-lookup-snippet "_deliminators" 'latex-mode) (point) (+ (point) (if (tec/tex-next-char-smart-close-delim open-char) 2 1)))))
+
+
+;; --- --- --- --- --- --- ---
+;; --- ADD DIGESTIF TO PATH --- 
+;; --- --- --- --- --- --- ---
+(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
+(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
+
+
+;; --- --- ---
+;; --- LSP --- 
+;; --- --- ---
+(after! lsp-mode
+  (setq lsp-completion-provider :none))  ;; do NOT use lsp’s company backend
+
+
+;; --- --- ---
+;; --- CORFU --- 
+;; --- --- ---
+;; add snippet popup completion
+(after! yasnippet
+  (use-package! yasnippet-capf))

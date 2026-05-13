@@ -71,3 +71,10 @@
 ;;  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
 
 (package! emacs-w3m)
+
+(package! yasnippet-capf)
+
+(package! let-completion
+  :recipe (:host github
+           :repo "gggion/let-completion.el"
+           :files ("*.el")))
