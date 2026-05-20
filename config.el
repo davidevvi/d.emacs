@@ -764,8 +764,8 @@ Such special cases should be remapped to another value, as given in `string-offs
 ;; --- CDLATEX --- 
 ;; --- --- --- ---
 ;; prefer cdlatex over yasnippets
-                                        ;(map! :map cdlatex-mode-map
-                                        ;      :i "TAB" #'cdlatex-tab)
+(map! :map cdlatex-mode-map
+      :i "TAB" #'cdlatex-tab)
 (after! cdlatex
   (setq cdlatex-env-alist
         '(("bmatrix" "\\begin{bmatrix}\n?\n\\end{bmatrix}" nil)
@@ -793,6 +793,8 @@ Such special cases should be remapped to another value, as given in `string-offs
      (?B    "\\mathbb"        nil          t    nil  nil)
      (?a    "\\abs"           nil          t    nil  nil))))
 
+;; bib file location
+(setq reftex-default-bibliography "/home/madv/Documents/PhD/references.bib")
 
 ;; --- --- --- --- --- 
 ;; --- DELIMITATORS --- 
@@ -877,3 +879,6 @@ Such special cases should be remapped to another value, as given in `string-offs
 ;; add snippet popup completion
 (after! yasnippet
   (use-package! yasnippet-capf))
+
+
+
