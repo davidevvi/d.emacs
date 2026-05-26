@@ -386,7 +386,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;; --- --- --- --- --- ---
 ;; --- ORG DEFAULTS ---
 ;; --- --- --- --- --- ---
-(setq org-directory "~/Documents/" ; Let's put files here.
+(setq org-directory "~/Documents/Org" ; Let's put files here.
     org-agenda-files (list org-directory)                  ; Seems like the obvious place.
     org-use-property-inheritance t                         ; It's convenient to have properties inherited.
     org-log-done 'time                                     ; Having the time a item is done sounds convenient.
@@ -407,6 +407,23 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (remove-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
+(after! org
+    (setq org-default-notes-file (expand-file-name "inbox.org" org-directory)
+        org-capture-templates
+        '(("X" "Inbox" entry
+              (file "inbox.org")
+              "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n"
+              :empty-lines 1
+              )
+             ("l" "Log" entry
+                 (file+olp+datetree "log.org")
+                 "* %U\n%?"
+                 :empty-lines 1
+                 )
+             )
+        )
+    )
+
 ;; --- --- --- --- ---
 ;; --- ORG MODERN ---
 ;; --- --- --- --- ---
@@ -420,9 +437,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                              (45 . "–")
                              (42 . "•"))
         org-modern-todo-faces
-        '(("TODO" :inverse-video t :inherit org-todo)
-             ("STRT" :inverse-video t :inherit +org-todo-active)
-             ("WAIT" :inverse-video t :inherit +org-todo-onhold))
+        '(("TODO" :inverse-video t :inherit org-todo :extend nil)
+             ("STRT" :inverse-video t :inherit +org-todo-active :extend nil) 
+             ("DONE" :inverse-video t :inherit +org-todo-done :extend nil)
+             ("WAIT" :inverse-video t :inherit +org-todo-onhold :extend nil)
+             )
         org-modern-footnote
         (cons nil (cadr org-script-display))
         org-modern-block-fringe nil
@@ -492,15 +511,16 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     ;; needs to be run after other hooks have acted.
     (run-at-time nil nil #'org-appear--set-elements))
 
+
 ;; --- --- --- --- ---
-;; --- ORG VISUALS --- 
+;; --- ORG VISUALS ---
 ;; --- --- --- --- ---
-;; Set outline dimensions
+
 (custom-set-faces!
-    '(outline-1 :weight extra-bold :height 1.25)
-    '(outline-2 :weight bold :height 1.15)
-    '(outline-3 :weight bold :height 1.12)
-    '(outline-4 :weight semi-bold :height 1.09)
+    '(outline-1 :weight extra-bold :height 2.0)
+    '(outline-2 :weight bold :height 1.5)
+    '(outline-3 :weight bold :height 1.25)
+    '(outline-4 :weight semi-bold :height 1.10)
     '(outline-5 :weight semi-bold :height 1.06)
     '(outline-6 :weight semi-bold :height 1.03)
     '(outline-8 :weight semi-bold)
@@ -520,6 +540,21 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
             jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
+
+;;(use-package! org-padding
+;;    :hook (org-mode . org-padding-mode)
+;;    :config
+;;    ;; Each pair is (padding-above . padding-below), one per heading level.
+;;    ;; Use nil for no padding.
+;;    (setq org-padding-heading-padding-alist
+;;        '((nil . 0.35)   ;; level 1: only below
+;;             (nil . 0.25)   ;; level 2
+;;             (nil . 0.20)   ;; level 3
+;;             (nil . 0.15)   ;; level 4
+;;             (nil . 0.10)   ;; level 5
+;;             (nil . 0.10)   ;; level 6
+;;             (nil . 0.10)   ;; level 7
+;;             (nil . 0.10)))) ;; level 8
 
 ;; Better indent and line spacing
 (defadvice! +org-indent--reduced-text-prefixes ()

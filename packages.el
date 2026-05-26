@@ -84,3 +84,7 @@
 (package! latex-extra)
 
 (package! highlight-indent-guides)
+
+(package! org-padding
+    :recipe (:host github
+                :repo "TonCherAmi/org-padding"))
