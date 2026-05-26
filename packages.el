@@ -63,18 +63,24 @@
 ;;
 ;;(package! exwm)
 
-(package! jinx) ;better spellcheck
 
 (package! org-modern)
 (package! org-appear)
 ;;(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree")
 ;;  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
 
-(package! emacs-w3m)
 
 (package! yasnippet-capf)
 
 (package! let-completion
-  :recipe (:host github
-           :repo "gggion/let-completion.el"
-           :files ("*.el")))
+    :recipe (:host github
+                :repo "gggion/let-completion.el"
+                :files ("*.el")))
+
+(package! jinx
+    :recipe (:host github :repo "minad/jinx" :files (:defaults "jinx-mod.c" "emacs-module.h"))
+    )
+
+(package! latex-extra)
+
+(package! highlight-indent-guides)
