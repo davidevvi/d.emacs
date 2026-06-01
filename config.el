@@ -3,6 +3,12 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+(add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'initial-frame-alist '(undecorated . t))
+
+(add-to-list 'default-frame-alist '(internal-border-width . 0))
+(add-to-list 'default-frame-alist '(border-width . 0))
+
 ;; --- --- --- --- --- ---
 ;; --- BETTER DEFAULTS ---
 ;; --- --- --- --- --- ---
@@ -834,7 +840,24 @@ Such special cases should be remapped to another value, as given in `string-offs
              (?a    "\\abs"           nil          t    nil  nil))))
 
 ;; bib file location
-(setq reftex-default-bibliography "/home/madv/Documents/PhD/references.bib")
+(setq reftex-default-bibliography '("/home/madv/Documents/PhD/references.bib"))
+
+;; better citation manager
+(after! citar
+    (setq citar-bibliography
+        '("~/Documents/PhD/references.bib"))
+
+    ;; What is shown in the completion list
+    (setq citar-templates
+        '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:80}")
+             (suffix . "     ${=key= id:15}")
+             (preview . "${author editor} (${date year issued}) ${title}, ${journal journaltitle publisher container-title collection-title}.")
+             (note . "Notes on ${author editor}, ${title}"))))
+(use-package! citar-capf
+    :after citar
+    :hook
+    (LaTeX-mode . citar-capf-setup)
+    (latex-mode . citar-capf-setup))
 
 ;; --- --- --- --- --- 
 ;; --- DELIMITATORS --- 
@@ -945,3 +968,11 @@ Such special cases should be remapped to another value, as given in `string-offs
     (setq highlight-indent-guides-auto-stack-character-face-perc 100)
     )
 
+
+;; --- --- ---
+;; --- BROWSER --- 
+;; --- --- ---
+
+;; open in a proper window, not popup
+(after! eww
+    (set-popup-rule! "^\\*eww\\*" :ignore t))
