@@ -976,3 +976,11 @@ Such special cases should be remapped to another value, as given in `string-offs
 ;; open in a proper window, not popup
 (after! eww
     (set-popup-rule! "^\\*eww\\*" :ignore t))
+
+
+;; --- --- ---
+;; --- FILE EXPLORER --- 
+;; --- --- ---
+
+;; use dirvish instead of dired 
+(after! dirvish (dirvish-override-dired-mode))
