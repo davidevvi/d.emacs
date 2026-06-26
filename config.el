@@ -5,9 +5,12 @@
 
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'initial-frame-alist '(undecorated . t))
-
+;;
 (add-to-list 'default-frame-alist '(internal-border-width . 0))
 (add-to-list 'default-frame-alist '(border-width . 0))
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
 ;; --- --- --- --- --- ---
 ;; --- BETTER DEFAULTS ---
@@ -991,3 +994,20 @@ Such special cases should be remapped to another value, as given in `string-offs
 ;; --- --- ---
 (after! lsp-pyright
   (setq lsp-pyright-langserver-command "pyright"))
+
+;; --- --- ---
+;; --- RSS --- 
+;; --- --- ---
+(use-package! elfeed
+  :commands elfeed
+  :config
+  (setq elfeed-search-filter "@1-week-ago +unread"))
+
+(use-package! elfeed-org
+  :after elfeed
+  :config
+  (setq rmh-elfeed-org-files
+        (list "~/Documents/Org/feed.org"))
+  (elfeed-org))
+
+(setq browse-url-browser-function 'eww-browse-url)

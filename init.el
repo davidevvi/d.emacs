@@ -205,12 +205,21 @@
        ;;notmuch
        ;;(wanderlust +gmail)
 
+<<<<<<< HEAD
        :app
        ;;calendar
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
+=======
+    :app
+    ;;calendar
+    ;;emms
+    ;;everywhere        ; *leave* Emacs!? You must be joking
+    ;;irc               ; how neckbeards socialize
+    (rss +org)        ; emacs as an RSS reader
+>>>>>>> aafed29beb225c2c6685227869cda831fec68267
 
        :config
        ;;literate
