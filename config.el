@@ -3,13 +3,13 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-(add-to-list 'default-frame-alist '(undecorated . t))
-(add-to-list 'initial-frame-alist '(undecorated . t))
+;;(add-to-list 'default-frame-alist '(undecorated . t))
+;;(add-to-list 'initial-frame-alist '(undecorated . t))
 ;;
-(add-to-list 'default-frame-alist '(internal-border-width . 0))
-(add-to-list 'default-frame-alist '(border-width . 0))
+;;(add-to-list 'default-frame-alist '(internal-border-width . 0))
+;;(add-to-list 'default-frame-alist '(border-width . 0))
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 
 ;; --- --- --- --- --- ---
@@ -996,6 +996,36 @@ Such special cases should be remapped to another value, as given in `string-offs
   (setq lsp-pyright-langserver-command "pyright"))
 
 ;; --- --- ---
+;; --- MANIM --- 
+;; --- --- ---
+(setq manim-quality "l")           ; "l" (480p), "m" (720p), "h" (1080p), "k" (4K)
+(setq manim-command "manim")       ; path to manim executable
+(setq manim-video-player nil)    ; nil = OS default (open / xdg-open)
+(use-package! manim-mode)
+
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(manim-mode . "python")))
+
+(after! lsp-pyright
+  (dolist (server '(pyright pyright-remote pyright-tramp))
+    (when-let ((client (gethash server lsp-clients)))
+      (let ((modes
+             (cl-struct-slot-value
+              'lsp--client 'major-modes client)))
+        (setf (cl-struct-slot-value
+               'lsp--client 'major-modes client)
+              (cons 'manim-mode
+                    (remove 'manim-mode modes)))))))
+
+(add-hook 'manim-mode-hook
+          (lambda ()
+            (require 'lsp-pyright)
+            (setq-local lsp-enabled-clients '(pyright))
+            (lsp-deferred)))
+
+
+;; --- --- ---
 ;; --- RSS --- 
 ;; --- --- ---
 (use-package! elfeed
@@ -1011,3 +1041,60 @@ Such special cases should be remapped to another value, as given in `string-offs
   (elfeed-org))
 
 (setq browse-url-browser-function 'eww-browse-url)
+
+
+;; --- --- ---
+;; --- LAAS --- 
+;; --- --- ---
+(use-package laas
+  :hook (LaTeX-mode . laas-mode)
+  :config ; do whatever here
+  (aas-set-snippets 'laas-mode
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"
+                    ;; bind to functions!
+                    "Sum" (lambda () (interactive)
+                            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+                    "Span" (lambda () (interactive)
+                             (yas-expand-snippet "\\Span($1)$0"))
+                    ";;M" (lambda () (interactive)
+                            (yas-expand-snippet "\\begin{pmatrix}
+                                        $0
+                                \\end{pmatrix}"))
+                    ;; add accent snippets
+                    :cond #'laas-object-on-left-condition
+                    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+
+
+
+;; --- --- ---
+;; --- CHROMIUM BROWSER --- 
+;; --- --- ---
+(use-package embr
+  :defer t
+  ;; :hook (embr-mode . embr-vimium-mode)
+  :config
+  (setq embr-browser-engine 'cloakbrowser
+        embr-hover-rate 30
+        embr-viewport-sizing 'dynamic
+        embr-screen-width (display-pixel-width)
+        embr-screen-height (display-pixel-height)
+        embr-color-scheme 'dark
+        embr-search-engine 'google
+        embr-scroll-method 'instant
+        embr-scroll-step 100
+        embr-frame-source 'screencast
+        embr-render-backend 'default
+        embr-display-method 'headless
+        embr-home-url "about:blank"
+        embr-session-restore t
+        embr-tab-bar t
+        embr-proxy-rules nil))
+(setq browse-url-browser-function 'embr-browse)
+(global-goto-address-mode 1)
+(set-frame-size nil 150 40)

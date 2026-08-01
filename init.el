@@ -174,14 +174,18 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +pretty)               ; organize your plain life in plain text
+       (org
+        +pretty
+        +dragndrop
+        +roam)               ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;graphviz          ; diagrams for confusing yourself even more
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
         +lsp
-        +pyright)
+        +pyright
+        +cython)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -205,21 +209,21 @@
        ;;notmuch
        ;;(wanderlust +gmail)
 
-<<<<<<< HEAD
+       <<<<<<< HEAD
        :app
        ;;calendar
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
-=======
-    :app
-    ;;calendar
-    ;;emms
-    ;;everywhere        ; *leave* Emacs!? You must be joking
-    ;;irc               ; how neckbeards socialize
-    (rss +org)        ; emacs as an RSS reader
->>>>>>> aafed29beb225c2c6685227869cda831fec68267
+       =======
+       :app
+       ;;calendar
+       ;;emms
+       ;;everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       (rss +org)        ; emacs as an RSS reader
+       >>>>>>> aafed29beb225c2c6685227869cda831fec68267
 
        :config
        ;;literate
