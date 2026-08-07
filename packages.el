@@ -55,7 +55,6 @@
 ;;
 ;;
 ;;(package! yasnippet-snippets)
-;;(package! laas)
 ;;
 ;;
 ;;(package! olivetti)
@@ -102,3 +101,8 @@
            :repo "emacs-os/embr.el"
            :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile")
            ))
+
+;; translator 
+(package! gt
+  :recipe (:host github
+           :repo "lorniu/gt.el"))

@@ -29,6 +29,7 @@
  scroll-preserve-screen-position 'always ; Don't have `point' jump around
  scroll-margin 2 ; It's nice to maintain a little margin
  display-time-default-load-average nil ; I don't think I've ever found this useful
+ indent-bars-mode nil
  ) 
 
 (display-time-mode 1) ; Enable time in the mode-line
@@ -1050,25 +1051,25 @@ Such special cases should be remapped to another value, as given in `string-offs
   :hook (LaTeX-mode . laas-mode)
   :config ; do whatever here
   (aas-set-snippets 'laas-mode
-                    ;; set condition!
-                    :cond #'texmathp ; expand only while in math
-                    "supp" "\\supp"
-                    "On" "O(n)"
-                    "O1" "O(1)"
-                    "Olog" "O(\\log n)"
-                    "Olon" "O(n \\log n)"
-                    ;; bind to functions!
-                    "Sum" (lambda () (interactive)
-                            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
-                    "Span" (lambda () (interactive)
-                             (yas-expand-snippet "\\Span($1)$0"))
-                    ";;M" (lambda () (interactive)
-                            (yas-expand-snippet "\\begin{pmatrix}
+    ;; set condition!
+    :cond #'texmathp ; expand only while in math
+    "supp" "\\supp"
+    "On" "O(n)"
+    "O1" "O(1)"
+    "Olog" "O(\\log n)"
+    "Olon" "O(n \\log n)"
+    ;; bind to functions!
+    "Sum" (lambda () (interactive)
+            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+    "Span" (lambda () (interactive)
+             (yas-expand-snippet "\\Span($1)$0"))
+    ";;M" (lambda () (interactive)
+            (yas-expand-snippet "\\begin{pmatrix}
                                         $0
                                 \\end{pmatrix}"))
-                    ;; add accent snippets
-                    :cond #'laas-object-on-left-condition
-                    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+    ;; add accent snippets
+    :cond #'laas-object-on-left-condition
+    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
 
 
 
@@ -1098,3 +1099,22 @@ Such special cases should be remapped to another value, as given in `string-offs
 (setq browse-url-browser-function 'embr-browse)
 (global-goto-address-mode 1)
 (set-frame-size nil 150 40)
+
+
+;; --- --- ---
+;; --- TRANSLATOR --- 
+;; --- --- ---
+(use-package! gt
+  :defer t
+  :config
+  (setq gt-preset-translators
+        `((it-en . ,(gt-translator
+                     :taker   (gt-taker :langs '(it en) :text 'word :pick 'paragraph)
+                     :engines (list (gt-google-engine))
+                     :render  (gt-buffer-render)))
+          (en-it . ,(gt-translator
+                     :taker   (gt-taker :langs '(en it) :text 'word :pick 'paragraph)
+                     :engines (list (gt-google-engine))
+                     :render  (gt-buffer-render)))
+
+          )))
