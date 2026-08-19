@@ -740,6 +740,23 @@ Such special cases should be remapped to another value, as given in `string-offs
     (defun tec/tex-delim-yas-expand (&optional open-char)
         (yas-expand-snippet (yas-lookup-snippet "_deliminators" 'latex-mode) (point) (+ (point) (if (tec/tex-next-char-smart-close-delim open-char) 2 1)))))
 
+(eval-after-load
+    "latex"
+  '(TeX-add-style-hook
+    "cleveref"
+    (lambda ()
+      (if (boundp 'reftex-ref-style-alist)
+      (add-to-list
+       'reftex-ref-style-alist
+       '("Cleveref" "cleveref"
+         (("\\cref" ?c) ("\\Cref" ?C) ("\\cpageref" ?d) ("\\Cpageref" ?D)))))
+      (reftex-ref-style-activate "Cleveref")
+      (TeX-add-symbols
+       '("cref" TeX-arg-ref)
+       '("Cref" TeX-arg-ref)
+       '("cpageref" TeX-arg-ref)
+       '("Cpageref" TeX-arg-ref)))))
+
 (add-to-list 'exec-path (expand-file-name "~/.local/bin"))
 (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
 
