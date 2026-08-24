@@ -31,6 +31,11 @@
 
 (global-set-key [remap dabbrev-expand] #'hippie-expand)
 
+(use-package! winpulse
+  :config
+  (winpulse-mode +1)
+  )
+
 (setq
     doom-font (font-spec :family "JetBrains Mono" :size 18)
     doom-big-font (font-spec :family "JetBrains Mono" :size 30)
@@ -41,7 +46,7 @@
 
 (setq display-line-numbers-type 'relative)
 
-(setq doom-theme 'doom-rouge)
+(setq doom-theme 'materialized)
 
 (defun shrek ()
     (let* ((banner '(

@@ -109,6 +109,13 @@ which buffer to show in the new window.
 (global-set-key [remap dabbrev-expand] #'hippie-expand)
 #+end_src
 
+Windows blink at you when you focus on them
+#+begin_src emacs-lisp
+(use-package! winpulse
+  :config
+  (winpulse-mode +1)
+  )
+#+end_src
 ** Frame decorations (disabled)
 
 Kept for reference — do ~:tangle yes~ to run undecorated / borderless / maximised frames.
@@ -146,7 +153,7 @@ AUCTeX folding and org ligature setup — worth keeping in sync with those secti
 ** Theme
 
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-rouge)
+(setq doom-theme 'materialized)
 #+end_src
 
 ** Dashboard banner
