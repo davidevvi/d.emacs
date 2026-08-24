@@ -473,19 +473,17 @@ check.
 * Org mode
 ** Core settings
 
-~org-export-with-sub-superscripts '{}~ means a lone ~_~ or ~^~ is literal; you must
-write ~_{}~ / ~^{}~ — important when writing prose containing underscores.
-
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/Org"
     org-agenda-files (list org-directory)
     org-use-property-inheritance t
     org-log-done 'time
     org-list-allow-alphabetical t        ; a. A. a) A) bullets
-    org-catch-invisible-edits 'smart
-    org-export-with-sub-superscripts '{}
+    org-fold-catch-invisible-edits 'show
+    org-export-with-sub-superscripts t
     org-export-allow-bind-keywords t
-    org-image-actual-width '(0.9))
+    org-image-actual-width '(0.9)
+    )
 #+end_src
 
 Babel defaults for *org files you write* (distinct from this config's own header args).
@@ -509,10 +507,7 @@ Hard-wrapped prose instead of soft visual wrapping.
 (add-hook 'text-mode-hook #'auto-fill-mode)
 #+end_src
 
-** Capture
-
-Two templates: ~X~ drops a TODO into the inbox with a creation timestamp, ~l~ appends a
-timestamped entry to a datetree log.
+** Capture Templates
 
 #+begin_src emacs-lisp
 (after! org
@@ -622,7 +617,7 @@ Reveals emphasis markers and sub/superscript markup when point enters them.
     :config
     (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil)
+        org-appear-autolinks t)
     ;; must run after other hooks have acted, for correct first-time setup
     (run-at-time nil nil #'org-appear--set-elements))
 #+end_src
@@ -630,26 +625,21 @@ Reveals emphasis markers and sub/superscript markup when point enters them.
 ** Headings and faces
 
 #+begin_src emacs-lisp
-(custom-set-faces!
-    '(outline-1 :weight extra-bold :height 2.0)
-    '(outline-2 :weight bold :height 1.5)
-    '(outline-3 :weight bold :height 1.25)
-    '(outline-4 :weight semi-bold :height 1.10)
-    '(outline-5 :weight semi-bold :height 1.06)
-    '(outline-6 :weight semi-bold :height 1.03)
-    '(outline-8 :weight semi-bold)
-    '(outline-9 :weight semi-bold))
+;(custom-set-faces!
+;    '(outline-1 :weight extra-bold :height 2.0)
+;    '(outline-2 :weight bold :height 1.5)
+;    '(outline-3 :weight bold :height 1.25)
+;    '(outline-4 :weight semi-bold :height 1.10)
+;    '(outline-5 :weight semi-bold :height 1.06)
+;    '(outline-6 :weight semi-bold :height 1.03)
+;    '(outline-8 :weight semi-bold)
+;    '(outline-9 :weight semi-bold))
 
 (custom-set-faces!
     '(org-document-title :height 1.2))
 
 (setq org-fontify-quote-and-verse-blocks t)
 #+end_src
-
-#+begin_quote
-~outline-7~ is skipped in the list above — probably unintentional; it'll inherit
-default weight while its neighbours are semi-bold.
-#+end_quote
 
 ** Performance
 
@@ -693,7 +683,7 @@ indent than the default padding.
 Priorities run A–E with a colour ramp red→blue.
 
 #+begin_src emacs-lisp
-(setq org-ellipsis " ▾ "
+(setq org-ellipsis "…"
     org-hide-leading-stars t
     org-priority-highest ?A
     org-priority-lowest ?E
@@ -712,7 +702,7 @@ The advice wipes Doom's org ligatures first, then installs only these.
 (appendq! +ligatures-extra-symbols
     (list :list_property "∷"
         :em_dash       "—"
-        :ellipses      "…"
+        :ellipsis      "…"
         :arrow_right   "→"
         :arrow_left    "←"
         :arrow_lr      "↔"

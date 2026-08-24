@@ -262,10 +262,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     org-use-property-inheritance t
     org-log-done 'time
     org-list-allow-alphabetical t        ; a. A. a) A) bullets
-    org-catch-invisible-edits 'smart
-    org-export-with-sub-superscripts '{}
+    org-fold-catch-invisible-edits 'show
+    org-export-with-sub-superscripts t
     org-export-allow-bind-keywords t
-    org-image-actual-width '(0.9))
+    org-image-actual-width '(0.9)
+    )
 
 (setq org-babel-default-header-args
     '((:session . "none")
@@ -373,19 +374,19 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     :config
     (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil)
+        org-appear-autolinks t)
     ;; must run after other hooks have acted, for correct first-time setup
     (run-at-time nil nil #'org-appear--set-elements))
 
-(custom-set-faces!
-    '(outline-1 :weight extra-bold :height 2.0)
-    '(outline-2 :weight bold :height 1.5)
-    '(outline-3 :weight bold :height 1.25)
-    '(outline-4 :weight semi-bold :height 1.10)
-    '(outline-5 :weight semi-bold :height 1.06)
-    '(outline-6 :weight semi-bold :height 1.03)
-    '(outline-8 :weight semi-bold)
-    '(outline-9 :weight semi-bold))
+;(custom-set-faces!
+;    '(outline-1 :weight extra-bold :height 2.0)
+;    '(outline-2 :weight bold :height 1.5)
+;    '(outline-3 :weight bold :height 1.25)
+;    '(outline-4 :weight semi-bold :height 1.10)
+;    '(outline-5 :weight semi-bold :height 1.06)
+;    '(outline-6 :weight semi-bold :height 1.03)
+;    '(outline-8 :weight semi-bold)
+;    '(outline-9 :weight semi-bold))
 
 (custom-set-faces!
     '(org-document-title :height 1.2))
@@ -416,7 +417,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                             "\u200b"))
                     nil 'face 'org-indent)))))
 
-(setq org-ellipsis " ▾ "
+(setq org-ellipsis "…"
     org-hide-leading-stars t
     org-priority-highest ?A
     org-priority-lowest ?E
@@ -430,7 +431,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (appendq! +ligatures-extra-symbols
     (list :list_property "∷"
         :em_dash       "—"
-        :ellipses      "…"
+        :ellipsis      "…"
         :arrow_right   "→"
         :arrow_left    "←"
         :arrow_lr      "↔"
