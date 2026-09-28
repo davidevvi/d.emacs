@@ -2,16 +2,16 @@
 ;;; NOTE: Generated from config.org — do not edit directly.
 
 (doom!
- :input
+:input
  ;;bidi              ; (tfel ot) thgir etirw uoy gnipleh
  ;;chinese
  ;;japanese
  ;;layout            ; auie,ctsrnm is the superior home row
  
- :completion
+:completion
  (corfu
-  +orderless)
-                                        ; complete with cap(f), cape and a flying feather!
+  +orderless
+  )  ; complete with cap(f), cape and a flying feather!
  (vertico
   +childframe
   +icons)        ; the search engine of the future
@@ -22,35 +22,35 @@
  ;; +icons
  ;; +prescient)        ; a search engine for love and life
  
- :ui
- ;;deft              ; notational velocity for Emacs
+:ui
  doom              ; what makes DOOM look the way it does
  dashboard    ; a nifty splash screen for Emacs
  doom-quit         ; DOOM quit-message prompts when you quit Emacs
- (emoji +unicode)  ; 🙂
- hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
- ;; ndent-guides     ; highlighted indent columns
- (ligatures +extra)         ; ligatures and symbols to make your code pretty again
- minimap           ; show a map of the code on the side
  modeline          ; snazzy, Atom-inspired modeline, plus API
- nav-flash         ; blink cursor line after big motions
- ;;neotree           ; a project drawer, like NERDTree for vim
- ophints           ; highlight the region an operation acts on
  (popup
   +all
   +defaults)   ; tame sudden yet inevitable temporary windows
- ;;tabs              ; a tab bar for Emacs
- treemacs          ; a project drawer, like neotree but cooler
- unicode           ; extended unicode support for various languages
- (vc-gutter
-  +pretty) ; vcs diff in the fringe
- vi-tilde-fringe   ; fringe tildes to mark beyond EOB
  (window-select
   +numbers)                              ; visually switch windows
  workspaces        ; tab emulation, persistence & separate workspaces
+ treemacs          ; a project drawer, like neotree but cooler
  zen               ; distraction-free coding or writing. NOTE: it contains mixed pitch
+ (emoji +unicode)  ; 🙂
+ (ligatures +extra)         ; ligatures and symbols to make your code pretty again
+ unicode           ; extended unicode support for various languages
+ nav-flash         ; blink cursor line after big motions
+ ophints           ; highlight the region an operation acts on
+ hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+ (vc-gutter
+  +pretty) ; vcs diff in the fringe
+ vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+ ;;deft              ; notational velocity for Emacs
+ ;; indent-guides     ; highlighted indent columns
+ ;;minimap           ; show a map of the code on the side
+ ;;neotree           ; a project drawer, like NERDTree for vim
+ ;;tabs              ; a tab bar for Emacs
  
- :editor
+:editor
  (evil +everywhere); come to the dark side, we have cookies
  file-templates    ; auto-snippets for empty files
  fold              ; (nigh) universal code folding
@@ -59,13 +59,12 @@
  ;;lispy             ; vim for lisp, for people who don't like vim
  ;;multiple-cursors  ; editing in many places at once
  ;;objed             ; text object editing for the innocent
- parinfer          ; turn lisp into python, sort of
+ ;;parinfer          ; turn lisp into python, sort of
  ;;rotate-text       ; cycle region at point between text candidates
- ;;snippets          ; my elves. They type so I don't have to
+ snippets          ; my elves. They type so I don't have to
  word-wrap         ; soft wrapping with language-aware indent
  
- 
- :emacs
+:emacs
  (dired             ; making dired pretty [functional]
   +icons
   +dirvish)
@@ -76,23 +75,23 @@
  undo              ; persistent, smarter undo for your inevitable mistakes
  vc                ; version-control and Emacs, sitting in a tree
  
- :term
+:term
  ;;eshell            ; the elisp shell that works everywhere
  ;;shell             ; simple shell REPL for Emacs
  ;;term              ; basic terminal emulator for Emacs
  vterm             ; the best terminal emulation in Emacs
  
- :checkers
+:checkers
  (syntax +childframe +flymake +icons); tasing you for every semicolon you forget
- (spell +flyspell) ; tasing you for misspelling mispelling
+ (spell +flyspell +everywhere) ; tasing you for misspelling mispelling
  grammar           ; tasing grammar mistake every you make
  
- :tools
+:tools
  ;;ansible
  biblio            ; Writes a PhD for you (citation needed)
  ;;collab            ; buffers with friends
  ;;debugger          ; FIXME stepping through code, to help you add bugs
-                                        ;direnv
+ ;;direnv
  ;;docker
  editorconfig      ; let someone else argue about tabs vs spaces
  ;;ein               ; tame Jupyter notebooks with emacs
@@ -111,11 +110,11 @@
  tree-sitter       ; syntax and parsing, sitting in a tree...
  ;;upload            ; map local to remote projects via ssh/ftp
  
- :os
+:os
  (:if (featurep :system 'macos) macos)  ; improve compatibility with macOS
  ;;tty               ; improve the terminal Emacs experience
  
- :lang
+:lang
  ;;agda              ; types of types of types of types...
  ;;beancount         ; mind the GAAP
  ;;(cc +lsp)         ; C > C++ == 1
@@ -192,25 +191,19 @@
  ;;zig               ; C, but simpler
  
  
- :email
+:email
  ;;(mu4e +org +gmail)
  ;;notmuch
  ;;(wanderlust +gmail)
  
- :app
- ;;calendar
- ;;emms
- ;;everywhere        ; *leave* Emacs!? You must be joking
- ;;irc               ; how neckbeards socialize
- ;;(rss +org)        ; emacs as an RSS reader
- :app
+:app
  ;;calendar
  ;;emms
  ;;everywhere        ; *leave* Emacs!? You must be joking
  ;;irc               ; how neckbeards socialize
  (rss +org)        ; emacs as an RSS reader
  
- :config
+:config
  literate
- (default +bindings +smartparens))
-
+ (default +bindings +smartparens)
+ )

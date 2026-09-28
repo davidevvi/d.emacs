@@ -3,10 +3,8 @@
 ;;; NOTE: Generated from config.org — do not edit directly.
 
 (package! org-modern)
-(package! org-appear)
-;;(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree")
-;;  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
 
+(package! org-appear)
 
 (package! yasnippet-capf)
 
@@ -16,8 +14,8 @@
            :files ("*.el")))
 
 (package! jinx
-  :recipe (:host github :repo "minad/jinx" :files (:defaults "jinx-mod.c" "emacs-module.h")))
-
+  :recipe (:host github :repo "minad/jinx" :files (:defaults "jinx-mod.c" "emacs-module.h"))
+  )
 
 (package! latex-extra)
 
@@ -40,8 +38,8 @@
 (package! embr
   :recipe (:host github
            :repo "emacs-os/embr.el"
-           :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile")))
-
+           :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile")
+           ))
 
 ;; translator 
 (package! gt
