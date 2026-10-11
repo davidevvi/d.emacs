@@ -101,7 +101,6 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/.config/doom/config.org")
    Since this file contains the init.el, we can't use the literate module.
    Instead we can use bin/org-tangle
 * Introduction -- File headers
-
 The ~lexical-binding~ headers must be the first line of the tangled file.
 
 #+begin_src emacs-lisp :tangle init.el
@@ -496,7 +495,7 @@ AUCTeX folding and org ligature setup — worth keeping in sync with those secti
 (setq
  doom-font (font-spec :family "JetBrains Mono" :size 18)
  doom-big-font (font-spec :family "JetBrains Mono" :size 30)
- doom-variable-pitch-font (font-spec :family "Overpass" :size 20)
+ doom-variable-pitch-font (font-spec :family "Inter" :size 18)
  doom-symbol-font (font-spec :family "JuliaMono")
  doom-serif-font (font-spec :family "IBM Plex Mono" :size 16 :weight 'light)
  )
