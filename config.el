@@ -1,25 +1,31 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 ;;; NOTE: Generated from config.org — do not edit directly.
 
+(setq-default display-line-numbers-type 'relative)
+
+(setq-default auto-save-default t)
+
+(setq-default truncate-string-ellipsis "...")
+
+(setq-default password-cache t
+              password-cache-expiry nil
+              )
+
+(setq-default display-time-default-load-average nil)
+
+(setq-default x-stretch-cursor t)
+
+(setq-default scroll-margin 5)
+
+(setq-default scroll-preserve-screen-position 'always)
+
 (setq-default indent-tabs-mode nil)
+
+(editorconfig-mode 1)
 
 (setq-default
  window-combination-resize t
- x-stretch-cursor t
  )
-
-(setq
- evil-want-fine-undo t
- auto-save-default t
- truncate-string-ellipsis "..."
- password-cache-expiry nil
- scroll-preserve-screen-position 'always
- scroll-margin 2
- display-time-default-load-average nil
- )
-
-(display-time-mode 1)     ; clock in the modeline
-(global-subword-mode 1)   ; treat CamelCase humps as words
 
 (setq evil-vsplit-window-right t
       evil-split-window-below t
@@ -29,100 +35,28 @@
   (consult-buffer)
   )
 
-(global-set-key [remap dabbrev-expand] #'hippie-expand)
-
-(use-package! winpulse
+(use-package! highlight-indent-guides
+  :hook ((prog-mode text-mode LaTeX-mode) . highlight-indent-guides-mode)
   :config
-  (winpulse-mode +1)
-  )
-
-(setq indent-bars-mode -1)
-
-(setq
- doom-font (font-spec :family "JetBrains Mono" :size 18)
- doom-big-font (font-spec :family "JetBrains Mono" :size 30)
- doom-variable-pitch-font (font-spec :family "Overpass" :size 20)
- doom-symbol-font (font-spec :family "JuliaMono")
- doom-serif-font (font-spec :family "IBM Plex Mono" :size 16 :weight 'light)
- )
-
-(setq display-line-numbers-type 'relative)
-
-(setq doom-theme 'materialized)
-
-(setq fancy-splash-image "~/.config/doom/sad-jester.jpg")
-
-(defun shrek ()
-  (let* ((banner '(
-                   "⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
-                   "⠸⡇⠀⠿⡀⠀⠀⠀⣀⡴⢿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠑⢄⣠⠾⠁⣀⣄⡈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⢀⡀⠁⠀⠀⠈⠙⠛⠂⠈⣿⣿⣿⣿⣿⠿⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⢀⡾⣁⣀⠀⠴⠂⠙⣗⡀⠀⢻⣿⣿⠭⢤⣴⣦⣤⣹⠀⠀⠀⢀⢴⣶⣆"
-                   "⠀⠀⢀⣾⣿⣿⣿⣷⣮⣽⣾⣿⣥⣴⣿⣿⡿⢂⠔⢚⡿⢿⣿⣦⣴⣾⠁⠸⣼⡿"
-                   "⠀⢀⡞⠁⠙⠻⠿⠟⠉⠀⠛⢹⣿⣿⣿⣿⣿⣌⢤⣼⣿⣾⣿⡟⠉⠀⠀⠀⠀⠀"
-                   "⠀⣾⣷⣶⠇⠀⠀⣤⣄⣀⡀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀"
-                   "⠀⠉⠈⠉⠀⠀⢦⡈⢻⣿⣿⣿⣶⣶⣶⣶⣤⣽⡹⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⠀⠉⠲⣽⡻⢿⣿⣿⣿⣿⣿⣿⣷⣜⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣷⣶⣮⣭⣽⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⣀⣀⣈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀"
-                   "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⠿⠿⠿⠛⠉             "
-                   ))
-         (longest-line (apply #'max (mapcar #'length banner))))
-    (put-text-property
-     (point)
-     (dolist (line banner (point))
-       (insert (+doom-dashboard--center
-                +doom-dashboard--width
-                (concat line (make-string (max 0 (- longest-line (length line))) 32)))
-               "\n"))
-     'face 'doom-dashboard-banner)))
-
-(setq +doom-dashboard-ascii-banner-fn #'shrek)
-
-(setq which-key-allow-multiple-replacements t)
-(after! which-key
-  (pushnew!
-   which-key-replacement-alist
-   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "\\1"))
-   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "\\1"))
-   ))
-
-(setq-default abbrev-mode t)
-(setq abbrev-file-name (expand-file-name "abbrev.el" doom-user-dir))
-
-(setq yas-snippet-dirs
-      '("~/.config/emacs/snippets"))
-
-(yas-global-mode 1)   ; or M-x yas-reload-all if YASnippet is already running
-
-(after! evil
-  (setq evil-move-cursor-back nil   ; 
+  (setq highlight-indent-guides-method 'bitmap
+        highlight-indent-guides-bitmap-function 'highlight-indent-guides--bitmap-line
+        highlight-indent-guides-responsive 'stack
+        highlight-indent-guides-auto-character-face-perc 50 
+        highlight-indent-guides-auto-top-character-face-perc 125
+        highlight-indent-guides-auto-stack-character-face-perc 80
+        highlight-indent-guides-delay 0
         )
   )
-(setq-default evil-escape-key-sequence "jk")
+
+(display-time-mode 1)     ; clock in the modeline
+;; If non-nil, a word count will be added to the selection-info modeline segment.
+(setq doom-modeline-enable-word-count nil)
+
+(setq fancy-splash-image "~/.config/doom/sad-jester.jpg")
 
 (after! consult
   (set-face-attribute 'consult-file nil :inherit 'consult-buffer)
   (setf (plist-get (alist-get 'perl consult-async-split-styles-alist) :initial) ";"))
-
-(use-package! jinx
-  :defer t
-  :init
-  (add-hook 'doom-init-ui-hook #'global-jinx-mode)
-  :config
-  (setq jinx-languages "en_GB")
-  ;; don't spellcheck inline source blocks in org
-  (push 'org-inline-src-block
-        (alist-get 'org-mode jinx-exclude-faces))
-  (after! ispell
-    (global-set-key [remap ispell-word] #'jinx-correct))
-  (after! evil-commands
-    (global-set-key [remap evil-next-flyspell-error] #'jinx-next)
-    (global-set-key [remap evil-prev-flyspell-error] #'jinx-previous))
-  (advice-add 'jinx-next :after (lambda (_) (left-word))))
 
 (after! marginalia
   (setq marginalia-censor-variables nil)
@@ -154,23 +88,20 @@
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
-(use-package editorconfig
-  :config
-  (editorconfig-mode 1))
+(global-set-key [remap dabbrev-expand] #'hippie-expand)
 
-(use-package! highlight-indent-guides
-  :hook ((prog-mode text-mode LaTeX-mode) . highlight-indent-guides-mode)
+(use-package! winpulse
   :config
-  (setq highlight-indent-guides-method 'bitmap
-        highlight-indent-guides-bitmap-function 'highlight-indent-guides--bitmap-line
-        highlight-indent-guides-responsive 'stack
-        )
-  (setq highlight-indent-guides-auto-character-face-perc 65)
-  (setq highlight-indent-guides-auto-top-character-face-perc 125)
-  (setq highlight-indent-guides-auto-stack-character-face-perc 100)
+  (winpulse-mode +1)
   )
 
-(after! dirvish (dirvish-override-dired-mode))
+(setq
+ doom-font (font-spec :family "JetBrains Mono" :size 18)
+ doom-big-font (font-spec :family "JetBrains Mono" :size 30)
+ doom-variable-pitch-font (font-spec :family "Overpass" :size 20)
+ doom-symbol-font (font-spec :family "JuliaMono")
+ doom-serif-font (font-spec :family "IBM Plex Mono" :size 16 :weight 'light)
+ )
 
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -212,54 +143,141 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
          (set-face-attribute 'variable-pitch-serif nil :font value)
          (set-default-toplevel-value symbol value)))
 
-(setq +zen-text-scale 0.8)
+(setq doom-theme 'materialized)
 
-(defvar +zen-serif-p t
-  "Whether to use a serifed font with `mixed-pitch-mode'.")
-(defvar +zen-org-starhide t
-  "The value `org-modern-hide-stars' is set to.")
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "\\1"))
+   ))
 
-(after! writeroom-mode
-  (defvar-local +zen--original-org-indent-mode-p nil)
-  (defvar-local +zen--original-mixed-pitch-mode-p nil)
-  (defun +zen-enable-mixed-pitch-mode-h ()
-    "Enable `mixed-pitch-mode' when in `+zen-mixed-pitch-modes'."
-    (when (apply #'derived-mode-p +zen-mixed-pitch-modes)
-      (if writeroom-mode
-          (progn
-            (setq +zen--original-mixed-pitch-mode-p mixed-pitch-mode)
-            (funcall (if +zen-serif-p #'mixed-pitch-serif-mode #'mixed-pitch-mode) 1))
-        (funcall #'mixed-pitch-mode (if +zen--original-mixed-pitch-mode-p 1 -1)))))
-  (defun +zen-prose-org-h ()
-    "Reformat the current Org buffer appearance for prose."
-    (when (eq major-mode 'org-mode)
-      (setq display-line-numbers nil
-            visual-fill-column-width 60
-            org-adapt-indentation nil)
-      (when (featurep 'org-modern)
-        (setq-local org-modern-star '("🙘" "🙙" "🙚" "🙛")
-                    org-modern-hide-stars +zen-org-starhide)
-        (org-modern-mode -1)
-        (org-modern-mode 1))
-      (setq
-       +zen--original-org-indent-mode-p org-indent-mode)
-      (org-indent-mode -1)))
-  (defun +zen-nonprose-org-h ()
-    "Reverse the effect of `+zen-prose-org'."
-    (when (eq major-mode 'org-mode)
-      (when (bound-and-true-p org-modern-mode)
-        (org-modern-mode -1)
-        (org-modern-mode 1))
-      (when +zen--original-org-indent-mode-p (org-indent-mode 1))))
-  (pushnew! writeroom--local-variables
-            'display-line-numbers
-            'visual-fill-column-width
-            'org-adapt-indentation
-            'org-modern-mode
-            'org-modern-star
-            'org-modern-hide-stars)
-  (add-hook 'writeroom-mode-enable-hook #'+zen-prose-org-h)
-  (add-hook 'writeroom-mode-disable-hook #'+zen-nonprose-org-h))
+;; (after! dirvish (dirvish-override-dired-mode))
+
+(after! eww
+  (set-popup-rule! "^\\*eww\\*" :ignore t))
+
+(use-package! elfeed
+  :commands elfeed
+  :config
+  (setq elfeed-search-filter "@1-week-ago +unread"))
+
+(use-package! elfeed-org
+  :after elfeed
+  :config
+  (setq rmh-elfeed-org-files
+        (list "~/Documents/Org/feed.org"))
+  (elfeed-org))
+
+(setq browse-url-browser-function 'eww-browse-url)
+
+(use-package embr
+  :defer t
+  ;; :hook (embr-mode . embr-vimium-mode)   ; modal navigation for evil users
+  :config
+  (setq embr-browser-engine 'cloakbrowser
+        embr-hover-rate 30
+        embr-viewport-sizing 'dynamic
+        embr-screen-width (display-pixel-width)
+        embr-screen-height (display-pixel-height)
+        embr-color-scheme 'dark
+        embr-search-engine 'google
+        embr-scroll-method 'instant
+        embr-scroll-step 100
+        embr-frame-source 'screencast
+        embr-render-backend 'default
+        embr-display-method 'headless
+        embr-home-url "about:blank"
+        embr-session-restore t
+        embr-tab-bar t
+        embr-proxy-rules nil))
+
+(global-goto-address-mode 1)   ; make URLs clickable everywhere
+(set-frame-size nil 150 40)
+
+(use-package! gt
+  :defer t
+  :config
+  (setq gt-preset-translators
+        `((it-en . ,(gt-translator
+                     :taker   (gt-taker :langs '(it en) :text 'word :pick 'paragraph)
+                     :engines (list (gt-google-engine))
+                     :render  (gt-buffer-render)))
+          (en-it . ,(gt-translator
+                     :taker   (gt-taker :langs '(en it) :text 'word :pick 'paragraph)
+                     :engines (list (gt-google-engine))
+                     :render  (gt-buffer-render)))
+          )))
+
+(setq-default evil-escape-key-sequence "jk")
+
+(after! evil
+  (setq evil-move-cursor-back nil))
+
+(setq evil-want-fine-undo t)
+
+(use-package! jinx
+  :defer t
+  :init
+  (add-hook 'doom-init-ui-hook #'global-jinx-mode)
+  :config
+  (setq jinx-languages "en_GB it_IT")
+  ;; don't spellcheck inline source blocks in org
+  (push 'org-inline-src-block
+        (alist-get 'org-mode jinx-exclude-faces))
+  (after! ispell
+    (global-set-key [remap ispell-word] #'jinx-correct))
+  (after! evil-commands
+    (global-set-key [remap evil-next-flyspell-error] #'jinx-next)
+    (global-set-key [remap evil-prev-flyspell-error] #'jinx-previous))
+  (advice-add 'jinx-next :after (lambda (_) (left-word))))
+
+(setq-default abbrev-mode t)
+(setq abbrev-file-name (expand-file-name "abbrev.el" doom-user-dir))
+
+(setq yas-snippet-dirs
+      '("~/.config/emacs/snippets"))
+
+(yas-global-mode 1)   ; or M-x yas-reload-all if YASnippet is already running
+
+(after! yasnippet
+  (use-package! yasnippet-capf))
+
+(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
+(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
+
+(after! lsp-mode
+  (setq lsp-completion-provider :none))
+
+(after! lsp-pyright
+  (setq lsp-pyright-langserver-command "pyright"))
+
+(setq manim-quality "l")         ; "l" 480p, "m" 720p, "h" 1080p, "k" 4K
+(setq manim-command "manim")     ; path to the manim executable
+(setq manim-video-player nil)    ; nil = OS default (open / xdg-open)
+(use-package! manim-mode)
+
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(manim-mode . "python")))
+
+(after! lsp-pyright
+  (dolist (server '(pyright pyright-remote pyright-tramp))
+    (when-let ((client (gethash server lsp-clients)))
+      (let ((modes
+             (cl-struct-slot-value
+              'lsp--client 'major-modes client)))
+        (setf (cl-struct-slot-value
+               'lsp--client 'major-modes client)
+              (cons 'manim-mode
+                    (remove 'manim-mode modes)))))))
+
+(add-hook 'manim-mode-hook
+          (lambda ()
+            (require 'lsp-pyright)
+            (setq-local lsp-enabled-clients '(pyright))
+            (lsp-deferred)))
 
 (setq org-directory "~/Documents/Org"
       org-agenda-files (list org-directory)
@@ -310,98 +328,143 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         )
   )
 
+(use-package! mixed-pitch
+  :hook (org-mode . mixed-pitch-mode))
+ 
+(use-package! olivetti
+  :hook (org-mode . olivetti-mode)
+  :config
+  (setq olivetti-body-width 90))
+ 
+(setq-hook! 'org-mode-hook line-spacing 0.3)  ; ~1.5x line height, as in Obsidian
+
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
   :config
-  (setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+  (setq org-modern-star nil
+       org-modern-hide-stars t 
         org-modern-table-vertical 1
         org-modern-table-horizontal 0.2
-        org-modern-list '((43 . "➤")
-                          (45 . "–")
-                          (42 . "•"))
+        org-modern-list '((?- . "•") (?+ . "◦") (?* . "•"))
         org-modern-todo-faces
-        '(("TODO" :inverse-video t :inherit org-todo :extend nil)
-          ("STRT" :inverse-video t :inherit +org-todo-active :extend nil)
-          ("DONE" :inverse-video t :inherit +org-todo-done :extend nil)
-          ("WAIT" :inverse-video t :inherit +org-todo-onhold :extend nil)
+        '(("TODO" :inherit org-todo             :extend nil)
+          ("STRT" :inherit +org-todo-active     :extend nil)
+          ("DONE" :inherit +org-todo-done       :extend nil)
+          ("WAIT" :inherit +org-todo-onhold     :extend nil)
           )
-        org-modern-footnote
-        (cons nil (cadr org-script-display)) 
-        org-modern-block-fringe nil
+        org-modern-footnote (cons nil (cadr org-script-display)) 
+        org-modern-block-fringe 16
         org-modern-block-name
         '((t . t)
           ("src" "»" "«")
-          ("example" "»–" "–«")
           ("quote" "❝" "❞")
-          ("export" "⏩" "⏪"))
+          )
         org-modern-progress nil
         org-modern-priority nil
         org-modern-horizontal-rule (make-string 36 ?─)
         org-modern-keyword
         '((t . t)
-          ("title" . "𝙏")
-          ("subtitle" . "𝙩")
-          ("author" . "𝘼")
-          ("email" . "")
-          ("date" . "𝘿")
-          ("property" . "󰠳")
-          ("options" . #("󰘵" 0 1 (display (height 0.75))))
-          ("startup" . "⏻")
-          ("macro" . "𝓜")
-          ("bind" . "󰌷")
-          ("bibliography" . "")
-          ("print_bibliography" . "󰌱")
-          ("cite_export" . "⮭")
-          ("print_glossary" . "󰌱ᴬᶻ")
-          ("glossary_sources" . "󰒻")
-          ("include" . "⇤")
-          ("setupfile" . "⇚")
-          ("html_head" . "🅷")
-          ("html" . "🅗")
-          ("latex_class" . "🄻")
-          ("latex_class_options" . "🄻󰒓")
-          ("latex_header" . "🅻")
-          ("latex_header_extra" . "🅻⁺")
-          ("latex" . "🅛")
-          ("beamer_theme" . "🄱")
-          ("beamer_color_theme" . "🄱󰏘")
-          ("beamer_font_theme" . "🄱𝐀")
-          ("beamer_header" . "🅱")
-          ("beamer" . "🅑")
-          ("attr_latex" . "🄛")
-          ("attr_html" . "🄗")
-          ("attr_org" . "⒪")
-          ("call" . "󰜎")
-          ("name" . "⁍")
-          ("header" . "›")
-          ("caption" . "☰")
-          ("results" . "🠶")))
+          ("title" . "")
+          ("results" . "🠶"))
+        )
 
   (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
+
+(after! org
+  (setq org-hide-emphasis-markers t
+        org-hide-leading-stars t
+        org-pretty-entities t
+        org-use-sub-superscripts '{}      ; only a_{1}, so snake_case stays plain
+        org-startup-indented nil
+        org-adapt-indentation nil
+        org-ellipsis " …"
+        org-fontify-quote-and-verse-blocks t
+        org-fontify-whole-heading-line nil)
+  (remove-hook 'org-mode-hook #'org-indent-mode))
 
 (use-package! org-appear
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks t)
-  ;; must run after other hooks have acted, for correct first-time setup
-  (run-at-time nil nil #'org-appear--set-elements))
-
-;(custom-set-faces!
-                                        ;    '(outline-1 :weight extra-bold :height 2.0)
-                                        ;    '(outline-2 :weight bold :height 1.5)
-                                        ;    '(outline-3 :weight bold :height 1.25)
-                                        ;    '(outline-4 :weight semi-bold :height 1.10)
-                                        ;    '(outline-5 :weight semi-bold :height 1.06)
-                                        ;    '(outline-6 :weight semi-bold :height 1.03)
-                                        ;    '(outline-8 :weight semi-bold)
-                                        ;    '(outline-9 :weight semi-bold))
+        org-appear-autolinks t
+        org-appear-autoentities t
+        org-appear-autokeywords t
+        org-appear-inside-latex t
+        org-appear-trigger 'manual)
+  )
+(add-hook 'org-mode-hook (lambda ()
+                           (add-hook 'evil-insert-state-entry-hook
+                                     #'org-appear-manual-start
+                                     nil
+                                     t)
+                           (add-hook 'evil-insert-state-exit-hook
+                                     #'org-appear-manual-stop
+                                     nil
+                                     t)))
 
 (custom-set-faces!
-  '(org-document-title :height 1.2))
+  `(org-document-title  :weight extra-bold :height 1.8)
+  `(org-level-1         :weight bold       :height 1.6)
+  `(org-level-2         :weight bold       :height 1.4)
+  `(org-level-3         :weight semi-bold  :height 1.25)
+  `(org-level-4         :weight semi-bold  :height 1.15)
+  `(org-level-5         :weight semi-bold  :height 1.05)
+  `(org-level-6         :weight semi-bold)
+  `(org-level-7         :weight semi-bold)
+  `(org-level-8         :weight semi-bold)
+  '(org-document-info-keyword :inherit shadow :height 0.85)
+  '(org-meta-line             :inherit shadow :height 0.85)
+  '(org-drawer                :inherit shadow :height 0.85)
+  '(org-special-keyword       :inherit shadow :height 0.85)
+  '(org-property-value        :inherit shadow :height 0.85)
+  '(org-block-begin-line      :inherit shadow :height 0.85)
+  '(org-block-end-line        :inherit shadow :height 0.85))
 
-(setq org-fontify-quote-and-verse-blocks t)
+(defvar +org-spacing-heading-above '(1.2 0.9 0.6)
+  "Space above level-1, level-2 and deeper headings.")
+(defvar +org-spacing-heading-below 0.3
+  "Space below a heading.")
+(defvar +org-spacing-block 0.5
+  "Space above #+begin_ and below #+end_ lines.")
+(defvar +org-spacing-blank-height 0.5
+  "Height of blank lines, as a fraction of normal text.")
+
+(defun +org-spacing--keywords ()
+  (let ((above (lambda (n) (nth (min (1- n) 2) +org-spacing-heading-above))))
+    `(;; below headings (listed first so "above" wins on a shared newline)
+      ("^\\*+ .*\\(\n\\)" 1 '(face nil line-spacing ,+org-spacing-heading-below))
+      ;; above headings: on the newline ending the previous line
+      ("\\(\n\\)\\* "         1 '(face nil line-spacing ,(funcall above 1)))
+      ("\\(\n\\)\\*\\{2\\} "  1 '(face nil line-spacing ,(funcall above 2)))
+      ("\\(\n\\)\\*\\{3,\\} " 1 '(face nil line-spacing ,(funcall above 3)))
+      ;; around blocks
+      ("\\(\n\\)[ \t]*#\\+[Bb][Ee][Gg][Ii][Nn]_" 1 '(face nil line-spacing ,+org-spacing-block))
+      ("^[ \t]*#\\+[Ee][Nn][Dd]_.*\\(\n\\)"     1 '(face nil line-spacing ,+org-spacing-block))
+      ;; shorter blank lines
+      ("^[ \t]*\n" 0 '(:height ,+org-spacing-blank-height) append))))
+
+(defun +org-spacing--extend-region ()
+  "Refontify the previous line too when the region starts on a heading or
+block line, since their spacing lives on the newline before them."
+  (save-excursion
+    (goto-char font-lock-beg)
+    (when (and (bolp) (not (bobp))
+               (looking-at "\\*+ \\|[ \t]*#\\+[Bb][Ee][Gg][Ii][Nn]_"))
+      (forward-line -1)
+      (setq font-lock-beg (point))
+      t)))
+
+(defun +org-spacing-h ()
+  ;; let font-lock remove stale spacing when a line stops being a heading
+  (setq-local font-lock-extra-managed-props
+              (cons 'line-spacing font-lock-extra-managed-props))
+  (add-hook 'font-lock-extend-region-functions #'+org-spacing--extend-region 90 t)
+  (font-lock-add-keywords nil (+org-spacing--keywords) 'append)
+  (font-lock-flush))
+
+;; depth 90: after org-modern has installed its keywords
+(add-hook 'org-mode-hook #'+org-spacing-h 90)
 
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
@@ -411,24 +474,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
 
-(defadvice! +org-indent--reduced-text-prefixes ()
-  :after #'org-indent--compute-prefixes
-  (setq org-indent--text-line-prefixes
-        (make-vector org-indent--deepest-level nil))
-  (when (> org-indent-indentation-per-level 0)
-    (dotimes (n org-indent--deepest-level)
-      (aset org-indent--text-line-prefixes
-            n
-            (org-add-props
-                (concat (make-string (* n (1- org-indent-indentation-per-level))
-                                     ?\s)
-                        (if (> n 0)
-                            (char-to-string org-indent-boundary-char)
-                          "\u200b"))
-                nil 'face 'org-indent)))))
-
-(setq org-ellipsis "…"
-      org-hide-leading-stars t
+(setq
+ ;;org-ellipsis " …"
+   ;;   org-startup-indented nil
+    ;;  org-adapt-indentation nil
       org-priority-highest ?A
       org-priority-lowest ?E
       org-priority-faces
@@ -447,18 +496,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 :arrow_lr      "↔"
                 :properties    "⚙"
                 :end           "∎"
-                :priority_a    #("⚑" 0 1 (face nerd-icons-red))
-                :priority_b    #("⬆" 0 1 (face nerd-icons-orange))
-                :priority_c    #("■" 0 1 (face nerd-icons-yellow))
-                :priority_d    #("⬇" 0 1 (face nerd-icons-green))
-                :priority_e    #("❓" 0 1 (face nerd-icons-blue))))
-
+                )
+          )
 (defadvice! +org-init-appearance-h--no-ligatures-a ()
   :after #'+org-init-appearance-h
   (set-ligatures! 'org-mode nil)
   (set-ligatures! 'org-mode
     :list_property "::"
-    :em_dash       "---"
+    :em_dash       "--"
     :ellipsis      "..."
     :arrow_right   "->"
     :arrow_left    "<-"
@@ -660,24 +705,24 @@ Such special cases should be remapped to another value, as given in `string-offs
   :hook (LaTeX-mode . laas-mode)
   :config
   (aas-set-snippets 'laas-mode
-    :cond #'texmathp   ; expand only while in math
-    "supp" "\\supp"
-    "On" "O(n)"
-    "O1" "O(1)"
-    "Olog" "O(\\log n)"
-    "Olon" "O(n \\log n)"
-    ;; bind to functions!
-    "Sum" (lambda () (interactive)
-            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
-    "Span" (lambda () (interactive)
-             (yas-expand-snippet "\\Span($1)$0"))
-    ";;M" (lambda () (interactive)
-            (yas-expand-snippet "\\begin{pmatrix}
+                    :cond #'texmathp   ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"
+                    ;; bind to functions!
+                    "Sum" (lambda () (interactive)
+                            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+                    "Span" (lambda () (interactive)
+                             (yas-expand-snippet "\\Span($1)$0"))
+                    ";;M" (lambda () (interactive)
+                            (yas-expand-snippet "\\begin{pmatrix}
                                         $0
                                 \\end{pmatrix}"))
-    ;; add accent snippets
-    :cond #'laas-object-on-left-condition
-    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+                    ;; add accent snippets
+                    :cond #'laas-object-on-left-condition
+                    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
 
 (setq reftex-default-bibliography '("~/Documents/PhD/references.bib"))
 
@@ -772,96 +817,3 @@ Such special cases should be remapped to another value, as given in `string-offs
        '("Cref" TeX-arg-ref)
        '("cpageref" TeX-arg-ref)
        '("Cpageref" TeX-arg-ref)))))
-
-(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
-(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
-
-(after! lsp-mode
-  (setq lsp-completion-provider :none))
-
-(after! yasnippet
-  (use-package! yasnippet-capf))
-
-(after! lsp-pyright
-  (setq lsp-pyright-langserver-command "pyright"))
-
-(setq manim-quality "l")         ; "l" 480p, "m" 720p, "h" 1080p, "k" 4K
-(setq manim-command "manim")     ; path to the manim executable
-(setq manim-video-player nil)    ; nil = OS default (open / xdg-open)
-(use-package! manim-mode)
-
-(after! lsp-mode
-  (add-to-list 'lsp-language-id-configuration
-               '(manim-mode . "python")))
-
-(after! lsp-pyright
-  (dolist (server '(pyright pyright-remote pyright-tramp))
-    (when-let ((client (gethash server lsp-clients)))
-      (let ((modes
-             (cl-struct-slot-value
-              'lsp--client 'major-modes client)))
-        (setf (cl-struct-slot-value
-               'lsp--client 'major-modes client)
-              (cons 'manim-mode
-                    (remove 'manim-mode modes)))))))
-
-(add-hook 'manim-mode-hook
-          (lambda ()
-            (require 'lsp-pyright)
-            (setq-local lsp-enabled-clients '(pyright))
-            (lsp-deferred)))
-
-(after! eww
-  (set-popup-rule! "^\\*eww\\*" :ignore t))
-
-(use-package! elfeed
-  :commands elfeed
-  :config
-  (setq elfeed-search-filter "@1-week-ago +unread"))
-
-(use-package! elfeed-org
-  :after elfeed
-  :config
-  (setq rmh-elfeed-org-files
-        (list "~/Documents/Org/feed.org"))
-  (elfeed-org))
-
-(setq browse-url-browser-function 'eww-browse-url)
-
-(use-package embr
-  :defer t
-  ;; :hook (embr-mode . embr-vimium-mode)   ; modal navigation for evil users
-  :config
-  (setq embr-browser-engine 'cloakbrowser
-        embr-hover-rate 30
-        embr-viewport-sizing 'dynamic
-        embr-screen-width (display-pixel-width)
-        embr-screen-height (display-pixel-height)
-        embr-color-scheme 'dark
-        embr-search-engine 'google
-        embr-scroll-method 'instant
-        embr-scroll-step 100
-        embr-frame-source 'screencast
-        embr-render-backend 'default
-        embr-display-method 'headless
-        embr-home-url "about:blank"
-        embr-session-restore t
-        embr-tab-bar t
-        embr-proxy-rules nil))
-
-(global-goto-address-mode 1)   ; make URLs clickable everywhere
-(set-frame-size nil 150 40)
-
-(use-package! gt
-  :defer t
-  :config
-  (setq gt-preset-translators
-        `((it-en . ,(gt-translator
-                     :taker   (gt-taker :langs '(it en) :text 'word :pick 'paragraph)
-                     :engines (list (gt-google-engine))
-                     :render  (gt-buffer-render)))
-          (en-it . ,(gt-translator
-                     :taker   (gt-taker :langs '(en it) :text 'word :pick 'paragraph)
-                     :engines (list (gt-google-engine))
-                     :render  (gt-buffer-render)))
-          )))

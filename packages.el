@@ -2,38 +2,25 @@
 ;;; $DOOMDIR/packages.el
 ;;; NOTE: Generated from config.org — do not edit directly.
 
-(package! org-modern)
+(package! rainbow-delimiters)
 
-(package! org-appear)
-
-(package! yasnippet-capf)
+(package! highlight-indent-guides)
 
 (package! let-completion
   :recipe (:host github
            :repo "gggion/let-completion.el"
            :files ("*.el")))
 
-(package! jinx
-  :recipe (:host github :repo "minad/jinx" :files (:defaults "jinx-mod.c" "emacs-module.h"))
+(package! winpulse
+  :recipe (:host github
+           :repo "xenodium/winpulse")
   )
 
-(package! latex-extra)
+(package! mixed-pitch)
 
-(package! highlight-indent-guides)
-
-(package! org-padding
+(package! emacs-materialized-theme 
   :recipe (:host github
-           :repo "TonCherAmi/org-padding"))
-
-
-(package! laas)
-
-(package! ox-hugo)
-
-(package! emacs-manim
-  :recipe (:host github
-           :repo "d-matsui/emacs-manim"))
-
+           :repo "xenodium/emacs-materialized-theme"))
 
 (package! embr
   :recipe (:host github
@@ -41,17 +28,32 @@
            :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile")
            ))
 
-;; translator 
 (package! gt
   :recipe (:host github
            :repo "lorniu/gt.el"))
 
-(package! emacs-materialized-theme 
-  :recipe (:host github
-           :repo "xenodium/emacs-materialized-theme"))
+(package! jinx
+  :recipe (:host github :repo "minad/jinx" :files (:defaults "jinx-mod.c" "emacs-module.h"))
+  )
 
-(package! rainbow-delimiters)
+(package! yasnippet-capf)
 
-(package! winpulse
+(package! aas)
+
+(package! emacs-manim
   :recipe (:host github
-           :repo "xenodium/winpulse"))
+           :repo "d-matsui/emacs-manim"))
+
+(package! org-modern)
+
+(package! org-appear)
+
+(package! latex-extra)
+
+(package! org-padding
+  :recipe (:host github
+           :repo "TonCherAmi/org-padding"))
+
+(package! ox-hugo)
+
+(package! olivetti)

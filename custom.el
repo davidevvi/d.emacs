@@ -19,7 +19,12 @@
      "48042425e84cd92184837e01d0b4fe9f912d875c43021c3bcb7eeb51f1be5710"
      "3c08da65265d80a7c8fc99fe51df3697d0fa6786a58a477a1b22887b4f116f62"
      "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478"
-     "56044c5a9cc45b6ec45c0eb28df100d3f0a576f18eef33ff8ff5d32bac2d9700" default)))
+     "56044c5a9cc45b6ec45c0eb28df100d3f0a576f18eef33ff8ff5d32bac2d9700" default))
+ '(org-agenda-files
+   '("~/.config/doom/full-literate-config.org"
+     "/home/madv/Documents/Org/archive.org" "/home/madv/Documents/Org/feed.org"
+     "/home/madv/Documents/Org/inbox.org" "/home/madv/Documents/Org/log.org"
+     "/home/madv/Documents/Org/projects.org")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
