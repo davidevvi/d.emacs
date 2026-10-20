@@ -330,30 +330,30 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (use-package! mixed-pitch
   :hook (org-mode . mixed-pitch-mode))
- 
+
 (use-package! olivetti
   :hook (org-mode . olivetti-mode)
   :config
   (setq olivetti-body-width 90))
  
-(setq-hook! 'org-mode-hook line-spacing 0.3)  ; ~1.5x line height, as in Obsidian
+(setq-hook! 'org-mode-hook line-spacing 0.3)
 
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
   :config
-  (setq org-modern-star nil
-       org-modern-hide-stars t 
+  (setq org-modern-star "replace"
+        org-modern-replace-stars "§§§§§"
         org-modern-table-vertical 1
         org-modern-table-horizontal 0.2
         org-modern-list '((?- . "•") (?+ . "◦") (?* . "•"))
         org-modern-todo-faces
-        '(("TODO" :inherit org-todo             :extend nil)
-          ("STRT" :inherit +org-todo-active     :extend nil)
-          ("DONE" :inherit +org-todo-done       :extend nil)
-          ("WAIT" :inherit +org-todo-onhold     :extend nil)
+        '(("TODO" :inherit org-todo           :background nil  :extend nil)
+          ("STRT" :inherit +org-todo-active   :background nil  :extend nil)
+          ("DONE" :inherit +org-todo-done     :background nil  :extend nil)
+          ("WAIT" :inherit +org-todo-onhold   :background nil  :extend nil)
           )
         org-modern-footnote (cons nil (cadr org-script-display)) 
-        org-modern-block-fringe 16
+        org-modern-block-fringe nil 
         org-modern-block-name
         '((t . t)
           ("src" "»" "«")
@@ -361,7 +361,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
           )
         org-modern-progress nil
         org-modern-priority nil
-        org-modern-horizontal-rule (make-string 36 ?─)
+        org-modern-horizontal-rule t
         org-modern-keyword
         '((t . t)
           ("title" . "")
@@ -405,7 +405,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (custom-set-faces!
   `(org-document-title  :weight extra-bold :height 1.8)
-  `(org-level-1         :weight bold       :height 1.6)
+  `(org-level-1         :weight extra-bold :height 1.6)
   `(org-level-2         :weight bold       :height 1.4)
   `(org-level-3         :weight semi-bold  :height 1.25)
   `(org-level-4         :weight semi-bold  :height 1.15)
@@ -418,8 +418,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   '(org-drawer                :inherit shadow :height 0.85)
   '(org-special-keyword       :inherit shadow :height 0.85)
   '(org-property-value        :inherit shadow :height 0.85)
-  '(org-block-begin-line      :inherit shadow :height 0.85)
-  '(org-block-end-line        :inherit shadow :height 0.85))
+  '(org-block :background unspecified      :inherit shadow :height 0.85)
+  '(org-block-begin-line  :background unspecified    :inherit shadow :height 0.85)
+  '(org-block-end-line     :background unspecified   :inherit shadow :height 0.85)
+  )
 
 (defvar +org-spacing-heading-above '(1.2 0.9 0.6)
   "Space above level-1, level-2 and deeper headings.")
@@ -653,7 +655,7 @@ Such special cases should be remapped to another value, as given in `string-offs
   (map!
    :map LaTeX-mode-map
    :ei [C-return] #'LaTeX-insert-item)
-  (setq TeX-electric-math '("\\(" . ""))
+  (setq TeX-electric-math '("\\(" . "\\)"))
 
   (add-hook 'TeX-mode-hook
             (lambda ()

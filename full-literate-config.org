@@ -120,7 +120,6 @@ The ~lexical-binding~ headers must be the first line of the tangled file.
 #+end_src
 
 * General Configs
-
 ** Some General General Configs
 Dooms defaults.
 #+name: config
@@ -572,7 +571,7 @@ of the ~setq!~ would make the dependency honest.
            :repo "xenodium/emacs-materialized-theme"))
 #+end_src
 #+begin_src emacs-lisp :tangle config.el
-(setq doom-theme 'materialized)
+(setq doom-theme 'modus-operandi-tinted)
 #+end_src
 
 ** which-key
@@ -637,6 +636,9 @@ Feed list is maintained as an org file rather than in elisp.
 
 (setq browse-url-browser-function 'eww-browse-url)
 #+end_src
+
+#+RESULTS:
+: eww-browse-url
 
 *** embr (headless Chromium)
 
@@ -938,13 +940,15 @@ this runs more than once.
             (lsp-deferred)))
 #+end_src
 ** Org mode
+We all agree this is one of the main reasons to use emacs. Let there be light!
 #+name: lang-org
 #+begin_src emacs-lisp :tangle no
 (org
  +pretty
  +dragndrop
  +hugo
- +roam)
+ +roam
+)
 #+end_src
 
 Better looking org files
@@ -1051,19 +1055,21 @@ Overpass (your =doom-variable-pitch-font=) for prose; code, tables and meta line
 monospace via mixed-pitch. No line numbers in notes — delete that hook if you rely on
 relative counts for =5j=-style motions.
  
+#+begin_src emacs-lisp :tangle config.el
+(use-package! mixed-pitch
+  :hook (org-mode . mixed-pitch-mode))
+#+end_src
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! olivetti)
 #+end_src
 #+begin_src emacs-lisp :tangle config.el
-(use-package! mixed-pitch
-  :hook (org-mode . mixed-pitch-mode))
- 
 (use-package! olivetti
   :hook (org-mode . olivetti-mode)
   :config
   (setq olivetti-body-width 90))
  
-(setq-hook! 'org-mode-hook line-spacing 0.3)  ; ~1.5x line height, as in Obsidian
+(setq-hook! 'org-mode-hook line-spacing 0.3)
 #+end_src
 *** org-modern
 
@@ -1074,19 +1080,19 @@ The keyword glyphs rely on a Nerd Font being present.
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
   :config
-  (setq org-modern-star nil
-       org-modern-hide-stars t 
+  (setq org-modern-star "replace"
+        org-modern-replace-stars "§§§§§"
         org-modern-table-vertical 1
         org-modern-table-horizontal 0.2
         org-modern-list '((?- . "•") (?+ . "◦") (?* . "•"))
         org-modern-todo-faces
-        '(("TODO" :inherit org-todo             :extend nil)
-          ("STRT" :inherit +org-todo-active     :extend nil)
-          ("DONE" :inherit +org-todo-done       :extend nil)
-          ("WAIT" :inherit +org-todo-onhold     :extend nil)
+        '(("TODO" :inherit org-todo           :background nil  :extend nil)
+          ("STRT" :inherit +org-todo-active   :background nil  :extend nil)
+          ("DONE" :inherit +org-todo-done     :background nil  :extend nil)
+          ("WAIT" :inherit +org-todo-onhold   :background nil  :extend nil)
           )
         org-modern-footnote (cons nil (cadr org-script-display)) 
-        org-modern-block-fringe 16
+        org-modern-block-fringe nil 
         org-modern-block-name
         '((t . t)
           ("src" "»" "«")
@@ -1094,7 +1100,7 @@ The keyword glyphs rely on a Nerd Font being present.
           )
         org-modern-progress nil
         org-modern-priority nil
-        org-modern-horizontal-rule (make-string 36 ?─)
+        org-modern-horizontal-rule t
         org-modern-keyword
         '((t . t)
           ("title" . "")
@@ -1103,7 +1109,7 @@ The keyword glyphs rely on a Nerd Font being present.
 
   (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
 #+end_src
- 
+
 #+begin_src emacs-lisp :tangle config.el
 (after! org
   (setq org-hide-emphasis-markers t
@@ -1151,7 +1157,7 @@ Reveals emphasis markers and sub/superscript markup when in insert mode.
 #+begin_src emacs-lisp :tangle config.el
 (custom-set-faces!
   `(org-document-title  :weight extra-bold :height 1.8)
-  `(org-level-1         :weight bold       :height 1.6)
+  `(org-level-1         :weight extra-bold :height 1.6)
   `(org-level-2         :weight bold       :height 1.4)
   `(org-level-3         :weight semi-bold  :height 1.25)
   `(org-level-4         :weight semi-bold  :height 1.15)
@@ -1164,8 +1170,10 @@ Reveals emphasis markers and sub/superscript markup when in insert mode.
   '(org-drawer                :inherit shadow :height 0.85)
   '(org-special-keyword       :inherit shadow :height 0.85)
   '(org-property-value        :inherit shadow :height 0.85)
-  '(org-block-begin-line      :inherit shadow :height 0.85)
-  '(org-block-end-line        :inherit shadow :height 0.85))
+  '(org-block :background unspecified      :inherit shadow :height 0.85)
+  '(org-block-begin-line  :background unspecified    :inherit shadow :height 0.85)
+  '(org-block-end-line     :background unspecified   :inherit shadow :height 0.85)
+  )
 #+end_src
 
 *** Vertical rhythm (Obsidian-style spacing)
@@ -1508,7 +1516,7 @@ sources don't drown out real completions.
   (map!
    :map LaTeX-mode-map
    :ei [C-return] #'LaTeX-insert-item)
-  (setq TeX-electric-math '("\\(" . ""))
+  (setq TeX-electric-math '("\\(" . "\\)"))
 
   (add-hook 'TeX-mode-hook
             (lambda ()
@@ -1538,7 +1546,6 @@ Indentation widths.
 #+end_src
 
 *** cdlatex
-
 CDLaTeX is preferred over yasnippet for maths input, so ~TAB~ in insert state goes to
 ~cdlatex-tab~. The symbol alist adds third-level (i.e. triple-press) entries for
 operators that were missing: ~k~→~\ker~, ~m~→~\lim~, ~c~→~\cos~ and so on.
