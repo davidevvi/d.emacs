@@ -1516,7 +1516,7 @@ sources don't drown out real completions.
   (map!
    :map LaTeX-mode-map
    :ei [C-return] #'LaTeX-insert-item)
-  (setq TeX-electric-math '("\\(" . "\\)"))
+  (setq TeX-electric-math '("\\(" . ""))
 
   (add-hook 'TeX-mode-hook
             (lambda ()
@@ -1586,6 +1586,10 @@ operators that were missing: ~k~→~\ker~, ~m~→~\lim~, ~c~→~\cos~ and so on.
 Expands maths abbreviations without a trigger key, gated on ~texmathp~ so they only
 fire inside maths. The second ~:cond~ switches to accent-style snippets that wrap the
 object to the left of point.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! laas)
+#+end_src
 
 #+begin_src emacs-lisp :tangle config.el
 (use-package laas

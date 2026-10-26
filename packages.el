@@ -57,3 +57,5 @@
 (package! ox-hugo)
 
 (package! olivetti)
+
+(package! laas)

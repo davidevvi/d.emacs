@@ -97,7 +97,8 @@
   +pretty
   +dragndrop
   +hugo
-  +roam)
+  +roam
+ )
  (latex              ; writing papers in Emacs has never been so fun
   +latexmk
   +fold

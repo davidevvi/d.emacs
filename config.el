@@ -143,7 +143,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
          (set-face-attribute 'variable-pitch-serif nil :font value)
          (set-default-toplevel-value symbol value)))
 
-(setq doom-theme 'materialized)
+(setq doom-theme 'modus-operandi-tinted)
 
 (setq which-key-allow-multiple-replacements t)
 (after! which-key
@@ -655,7 +655,7 @@ Such special cases should be remapped to another value, as given in `string-offs
   (map!
    :map LaTeX-mode-map
    :ei [C-return] #'LaTeX-insert-item)
-  (setq TeX-electric-math '("\\(" . "\\)"))
+  (setq TeX-electric-math '("\\(" . ""))
 
   (add-hook 'TeX-mode-hook
             (lambda ()
