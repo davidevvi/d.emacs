@@ -95,6 +95,7 @@
  sh
  (org
   +pretty
+  +noter
   +dragndrop
   +hugo
   +roam

@@ -288,6 +288,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       org-export-with-sub-superscripts t
       org-export-allow-bind-keywords t
       org-image-actual-width '(0.9)
+      org-noter-notes-search-path '("~/Documents/Org/notes/")
       )
 
 (setq org-babel-default-header-args
@@ -729,8 +730,21 @@ Such special cases should be remapped to another value, as given in `string-offs
 (setq reftex-default-bibliography '("~/Documents/PhD/references.bib"))
 
 (after! citar
-  (setq citar-bibliography
-        '("~/Documents/PhD/references.bib"))
+  (setq citar-bibliography '("~/Documents/PhD/references.bib"))
+  ;; turn windows paths into wsl paths
+  (defun my/citar-file-parser-wsl (file-field)
+    "Unescape (C\\:\\\\...) and convert Windows paths in FILE-FIELD to /mnt/c/..."
+    (mapcar (lambda (f)
+              (setq f (string-trim f))
+              ;; undo escaping: \: -> :   \\ -> \   \; -> ;
+              (setq f (replace-regexp-in-string "\\\\\\([\\\\:;]\\)" "\\1" f))
+              (if (string-match "\\`\\([A-Za-z]\\):[\\/]\\(.*\\)\\'" f)
+                  (concat "/mnt/" (downcase (match-string 1 f)) "/"
+                          (replace-regexp-in-string "\\\\" "/" (match-string 2 f)))
+                f))
+            (split-string file-field ";" t)))
+  (add-to-list 'citar-file-parser-functions #'my/citar-file-parser-wsl)
+  
 
   ;; what is shown in the completion list
   (setq citar-templates
@@ -743,7 +757,8 @@ Such special cases should be remapped to another value, as given in `string-offs
   :after citar
   :hook
   (LaTeX-mode . citar-capf-setup)
-  (latex-mode . citar-capf-setup))
+  (latex-mode . citar-capf-setup)
+  )
 
 (after! tex
   (defvar tec/tex-last-delim-char nil
